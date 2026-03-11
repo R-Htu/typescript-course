@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript + Node.js — TS Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inconsolata:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090b;
+    --surface: #111113;
+    --card: #18181b;
+    --border: #27272a;
+    --node: #68a063;
+    --node-light: rgba(104,160,99,0.12);
+    --ts: #3b82f6;
+    --ts-light: rgba(59,130,246,0.1);
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --purple: #a855f7;
+    --text: #fafafa;
+    --muted: #71717a;
+    --subtle: #1c1c1f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(9,9,11,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-weight: 600; font-size: 0.88rem; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .node-dot { width: 8px; height: 8px; background: var(--node); border-radius: 50%; display: inline-block; }
+  .back-btn {
+    font-family: 'Inconsolata', monospace; font-size: 0.75rem;
+    color: var(--muted); text-decoration: none;
+    border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; transition: all 0.2s;
+  }
+  .back-btn:hover { color: var(--node); border-color: var(--node); }
+
+  .hero {
+    padding: 80px 0 60px; border-bottom: 1px solid var(--border);
+    background: radial-gradient(ellipse at 70% 50%, rgba(104,160,99,0.06) 0%, transparent 60%);
+  }
+  .lesson-tag {
+    font-family: 'Inconsolata', monospace; font-size: 0.72rem;
+    color: var(--node); letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.1; margin-bottom: 18px; }
+  h1 .ts { color: var(--ts); }
+  h1 .node { color: var(--node); }
+  .hero-desc { font-size: 0.98rem; color: var(--muted); max-width: 560px; line-height: 1.75; font-weight: 300; }
+
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 6px; }
+  .section-desc { font-size: 0.88rem; color: var(--muted); margin-bottom: 24px; }
+
+  h3 { font-family: 'Inconsolata', monospace; font-size: 0.9rem; color: var(--node); margin-bottom: 10px; }
+
+  p { color: var(--muted); line-height: 1.75; margin-bottom: 14px; font-size: 0.92rem; }
+  p strong { color: var(--text); }
+  code { font-family: 'Inconsolata', monospace; font-size: 0.85em; background: var(--subtle); color: var(--ts); padding: 2px 6px; border-radius: 4px; }
+
+  .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 18px 0; }
+  .code-header {
+    background: var(--card); padding: 10px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-filename { font-family: 'Inconsolata', monospace; font-size: 0.7rem; color: var(--muted); }
+  .code-lang { font-family: 'Inconsolata', monospace; font-size: 0.65rem; padding: 2px 8px; border-radius: 3px; }
+  .lang-ts { background: var(--ts-light); color: #60a5fa; }
+  .lang-bash { background: var(--node-light); color: var(--node); }
+  .lang-json { background: rgba(234,179,8,0.1); color: var(--yellow); }
+
+  pre { padding: 20px; font-family: 'Inconsolata', monospace; font-size: 0.82rem; line-height: 1.75; overflow-x: auto; white-space: pre-wrap; color: #d4d4d8; }
+
+  .kw { color: #f472b6; }
+  .type { color: #38bdf8; }
+  .str { color: #86efac; }
+  .cmt { color: #52525b; font-style: italic; }
+  .fn { color: #fbbf24; }
+  .num { color: #fb923c; }
+  .dec { color: var(--node); }
+  .imp { color: #c084fc; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 20px 0; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 18px; transition: all 0.2s;
+  }
+  .card:hover { border-color: rgba(104,160,99,0.3); }
+  .card-title { font-family: 'Inconsolata', monospace; font-size: 0.85rem; color: var(--node); margin-bottom: 6px; }
+  .card-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+  .tip { background: var(--node-light); border-left: 3px solid var(--node); padding: 14px 18px; border-radius: 0 6px 6px 0; margin: 18px 0; }
+  .tip p { margin: 0; color: #86a880; font-size: 0.88rem; }
+  .info { background: var(--ts-light); border-left: 3px solid var(--ts); padding: 14px 18px; border-radius: 0 6px 6px 0; margin: 18px 0; }
+  .info p { margin: 0; color: #93bbfc; font-size: 0.88rem; }
+
+  footer { text-align: center; padding: 36px 24px; font-family: 'Inconsolata', monospace; font-size: 0.68rem; color: var(--muted); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span class="node-dot"></span> TypeScript + Node.js</div>
+  <a href="#" class="back-btn">← Back</a>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="lesson-tag">Backend · Lesson 16</div>
+    <h1><span class="ts">TypeScript</span><br>+ <span class="node">Node.js</span></h1>
+    <p class="hero-desc">Build type-safe backend APIs with Express or NestJS — full TypeScript on the server side.</p>
+  </div>
+
+  <!-- SETUP -->
+  <section>
+    <h2>Project Setup</h2>
+    <p class="section-desc">Setting up TypeScript in a Node.js project from scratch.</p>
+    <div class="code-block">
+      <div class="code-header"><span class="code-filename">terminal</span><span class="code-lang lang-bash">bash</span></div>
+      <pre><span class="cmt"># Init project & install dependencies</span>
+npm init -y
+npm install typescript ts-node @types/node --save-dev
+npx tsc --init
+
+<span class="cmt"># Add dev script to package.json</span>
+<span class="cmt"># "dev": "ts-node src/index.ts"</span>
+<span class="cmt"># "build": "tsc"</span>
+
+<span class="cmt"># Or use tsx for faster restarts</span>
+npm install tsx --save-dev
+<span class="cmt"># "dev": "tsx watch src/index.ts"</span></pre>
+    </div>
+  </section>
+
+  <!-- EXPRESS -->
+  <section>
+    <h2>TypeScript + Express</h2>
+    <p class="section-desc">The most popular Node.js framework — with full TypeScript support via <code>@types/express</code>.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-filename">terminal — install</span><span class="code-lang lang-bash">bash</span></div>
+      <pre>npm install express
+npm install @types/express --save-dev</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-filename">src/index.ts</span><span class="code-lang lang-ts">TS</span></div>
+      <pre><span class="kw">import</span> express, { <span class="type">Request</span>, <span class="type">Response</span>, <span class="type">NextFunction</span> } <span class="kw">from</span> <span class="str">'express'</span>;
+
+<span class="kw">const</span> app = express();
+app.use(express.json());
+
+<span class="cmt">// Type your data shapes</span>
+<span class="kw">interface</span> <span class="type">User</span> {
+  id: <span class="num">number</span>;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+}
+
+<span class="kw">const</span> users: <span class="type">User</span>[] = [
+  { id: <span class="num">1</span>, name: <span class="str">"Alice"</span>, email: <span class="str">"alice@example.com"</span> },
+];
+
+<span class="cmt">// GET all users</span>
+app.get(<span class="str">'/users'</span>, (req: <span class="type">Request</span>, res: <span class="type">Response</span>) =&gt; {
+  res.json(users);
+});
+
+<span class="cmt">// GET user by ID — typed route params</span>
+app.get(<span class="str">'/users/:id'</span>, (req: <span class="type">Request</span>&lt;{ id: <span class="type">string</span> }&gt;, res: <span class="type">Response</span>) =&gt; {
+  <span class="kw">const</span> user = users.find(u =&gt; u.id === +req.params.id);
+  <span class="kw">if</span> (!user) <span class="kw">return</span> res.status(<span class="num">404</span>).json({ error: <span class="str">'Not found'</span> });
+  res.json(user);
+});
+
+<span class="cmt">// POST create user — typed request body</span>
+app.post(<span class="str">'/users'</span>, (req: <span class="type">Request</span>&lt;{}, {}, <span class="type">Omit</span>&lt;<span class="type">User</span>, <span class="str">'id'</span>&gt;&gt;, res: <span class="type">Response</span>) =&gt; {
+  <span class="kw">const</span> newUser: <span class="type">User</span> = { id: users.length + <span class="num">1</span>, ...req.body };
+  users.push(newUser);
+  res.status(<span class="num">201</span>).json(newUser);
+});
+
+app.listen(<span class="num">3000</span>, () =&gt; console.log(<span class="str">'Server running on :3000'</span>));</pre>
+    </div>
+  </section>
+
+  <!-- TYPED REQUEST BODY -->
+  <section>
+    <h2>Custom Request & Response Types</h2>
+    <p class="section-desc">Extend Express types to add type safety for params, body, and query.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-filename">src/types.ts</span><span class="code-lang lang-ts">TS</span></div>
+      <pre><span class="kw">import</span> { <span class="type">Request</span> } <span class="kw">from</span> <span class="str">'express'</span>;
+
+<span class="cmt">// Typed query params: /search?q=alice&page=2</span>
+<span class="kw">interface</span> <span class="type">SearchQuery</span> {
+  q?: <span class="type">string</span>;
+  page?: <span class="type">string</span>;
+}
+
+<span class="cmt">// Typed route params: /users/:id</span>
+<span class="kw">interface</span> <span class="type">UserParams</span> {
+  id: <span class="type">string</span>;
+}
+
+<span class="cmt">// Full typed request: Request&lt;Params, ResBody, ReqBody, Query&gt;</span>
+<span class="kw">type</span> <span class="type">SearchRequest</span> = <span class="type">Request</span>&lt;{}, {}, {}, <span class="type">SearchQuery</span>&gt;;
+
+app.get(<span class="str">'/search'</span>, (req: <span class="type">SearchRequest</span>, res: <span class="type">Response</span>) =&gt; {
+  <span class="kw">const</span> { q, page = <span class="str">'1'</span> } = req.query;
+  <span class="cmt">// q is string | undefined  ✅</span>
+  <span class="cmt">// page is string | undefined  ✅</span>
+});</pre>
+    </div>
+  </section>
+
+  <!-- MIDDLEWARE -->
+  <section>
+    <h2>Typing Middleware</h2>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-filename">src/middleware/auth.ts</span><span class="code-lang lang-ts">TS</span></div>
+      <pre><span class="kw">import</span> { <span class="type">Request</span>, <span class="type">Response</span>, <span class="type">NextFunction</span> } <span class="kw">from</span> <span class="str">'express'</span>;
+
+<span class="cmt">// Extend Request to include user data</span>
+<span class="kw">declare global</span> {
+  <span class="kw">namespace</span> Express {
+    <span class="kw">interface</span> <span class="type">Request</span> {
+      user?: { id: <span class="type">number</span>; role: <span class="type">string</span> };
+    }
+  }
+}
+
+<span class="kw">export function</span> <span class="fn">authMiddleware</span>(
+  req: <span class="type">Request</span>, res: <span class="type">Response</span>, next: <span class="type">NextFunction</span>
+): <span class="type">void</span> {
+  <span class="kw">const</span> token = req.headers.authorization;
+  <span class="kw">if</span> (!token) { res.status(<span class="num">401</span>).json({ error: <span class="str">'Unauthorized'</span> }); <span class="kw">return</span>; }
+
+  <span class="cmt">// attach user to request</span>
+  req.user = { id: <span class="num">1</span>, role: <span class="str">'admin'</span> };
+  next();
+}
+
+<span class="cmt">// Now req.user is typed everywhere ✅</span>
+app.get(<span class="str">'/profile'</span>, authMiddleware, (req: <span class="type">Request</span>, res: <span class="type">Response</span>) =&gt; {
+  res.json(req.user);  <span class="cmt">// { id: number; role: string } | undefined</span>
+});</pre>
+    </div>
+  </section>
+
+  <!-- NESTJS PREVIEW -->
+  <section>
+    <h2>NestJS — TypeScript-First Framework</h2>
+    <p class="section-desc">NestJS is built specifically for TypeScript. It uses decorators, modules, and dependency injection — giving you a structured, scalable architecture.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-filename">terminal</span><span class="code-lang lang-bash">bash</span></div>
+      <pre>npm install -g @nestjs/cli
+nest new my-api
+cd my-api && npm run start:dev</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-filename">users/users.controller.ts</span><span class="code-lang lang-ts">TS</span></div>
+      <pre><span class="kw">import</span> { Controller, Get, Post, Body, Param, Delete } <span class="kw">from</span> <span class="str">'@nestjs/common'</span>;
+<span class="kw">import</span> { <span class="type">UsersService</span> } <span class="kw">from</span> <span class="str">'./users.service'</span>;
+<span class="kw">import</span> { <span class="type">CreateUserDto</span> } <span class="kw">from</span> <span class="str">'./dto/create-user.dto'</span>;
+
+<span class="dec">@Controller</span>(<span class="str">'users'</span>)
+<span class="kw">export class</span> <span class="type">UsersController</span> {
+  constructor(<span class="kw">private readonly</span> usersService: <span class="type">UsersService</span>) {}
+
+  <span class="dec">@Get</span>()
+  findAll() { <span class="kw">return</span> this.usersService.findAll(); }
+
+  <span class="dec">@Get</span>(<span class="str">':id'</span>)
+  findOne(<span class="dec">@Param</span>(<span class="str">'id'</span>) id: <span class="type">string</span>) {
+    <span class="kw">return</span> this.usersService.findOne(+id);
+  }
+
+  <span class="dec">@Post</span>()
+  create(<span class="dec">@Body</span>() dto: <span class="type">CreateUserDto</span>) {
+    <span class="kw">return</span> this.usersService.create(dto);
+  }
+
+  <span class="dec">@Delete</span>(<span class="str">':id'</span>)
+  remove(<span class="dec">@Param</span>(<span class="str">'id'</span>) id: <span class="type">string</span>) {
+    <span class="kw">return</span> this.usersService.remove(+id);
+  }
+}</pre>
+    </div>
+
+    <div class="info">
+      <p>📌 NestJS generates the full CRUD boilerplate: <code>nest generate resource users</code> creates controller, service, DTOs, and module in one command.</p>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section>
+    <h2>Express vs NestJS</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Express</div>
+        <div class="card-desc">Minimal and flexible. You choose your structure. Great for small APIs and when you need full control.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">NestJS</div>
+        <div class="card-desc">Opinionated and structured. Uses Angular-like architecture. Best for large teams and complex backends.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fastify</div>
+        <div class="card-desc">Like Express but faster. Has excellent TypeScript support and a great plugin ecosystem.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hono</div>
+        <div class="card-desc">Ultra-lightweight, TypeScript-first, runs on Edge runtimes (Cloudflare Workers, Deno, Bun).</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>TS Academy · TypeScript + Node.js · Lesson 16</footer>
+</body>
+</html>

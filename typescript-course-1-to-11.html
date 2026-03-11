@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeScript Course - Learn TypeScript from Zero</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #141414; }
+    html { scroll-behavior: smooth; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 2rem; }
+      h3 { font-size: 1.25rem; }
+    }
+
+    .type-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .type-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); }
+
+    .mobile-menu { display: none; }
+    .mobile-menu.active { display: block; }
+
+    .hamburger {
+      width: 25px;
+      height: 25px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+    }
+    .hamburger span {
+      display: block; width: 25px; height: 3px;
+      background: white; transition: 0.3s;
+      transform-origin: center;
+      position: relative;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .new-badge {
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      font-size: 0.6rem;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+
+<body class="text-white font-sans">
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-50 bg-black shadow-lg border-b border-gray-800">
+    <div class="flex items-center justify-between px-6 md:px-10 py-4">
+      <h1 class="text-xl md:text-2xl font-bold text-blue-600">TS Academy</h1>
+      <nav class="hidden md:flex space-x-4 text-sm text-gray-300 flex-wrap">
+        <a href="#lesson1" class="hover:text-white transition">Lesson 1</a>
+        <a href="#lesson2" class="hover:text-white transition">Lesson 2</a>
+        <a href="#lesson3" class="hover:text-white transition">Lesson 3</a>
+        <a href="#lesson4" class="hover:text-white transition">Lesson 4</a>
+        <a href="#lesson5" class="hover:text-white transition">Lesson 5</a>
+        <a href="#lesson6" class="hover:text-white transition">Lesson 6</a>
+        <a href="#lesson7" class="hover:text-white transition text-blue-400">Lesson 7</a>
+        <a href="#lesson8" class="hover:text-white transition text-blue-400">Lesson 8</a>
+        <a href="#lesson9" class="hover:text-white transition text-blue-400">Lesson 9</a>
+        <a href="#lesson10" class="hover:text-white transition text-blue-400">Lesson 10</a>
+        <a href="#lesson11" class="hover:text-white transition text-blue-400">Lesson 11</a>
+      </nav>
+      <button class="md:hidden hamburger" id="menuBtn" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav id="mobileMenu" class="mobile-menu bg-[#1a1a1a] border-t border-gray-800">
+      <a href="#lesson1" onclick="closeMenu()" class="block px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">📚 Lesson 1 - What is TypeScript?</a>
+      <a href="#lesson2" onclick="closeMenu()" class="block px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">🎯 Lesson 2 - Primitive Types</a>
+      <a href="#lesson3" onclick="closeMenu()" class="block px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">📝 Lesson 3 - Arrays & Tuples</a>
+      <a href="#lesson4" onclick="closeMenu()" class="block px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">📦 Lesson 4 - Objects & Interfaces</a>
+      <a href="#lesson5" onclick="closeMenu()" class="block px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">⚡ Lesson 5 - Functions</a>
+      <a href="#lesson6" onclick="closeMenu()" class="block px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">🔀 Lesson 6 - Union Types</a>
+      <a href="#lesson7" onclick="closeMenu()" class="block px-6 py-3 text-blue-400 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">🏛️ Lesson 7 - Classes ✨ NEW</a>
+      <a href="#lesson8" onclick="closeMenu()" class="block px-6 py-3 text-blue-400 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">🧬 Lesson 8 - Generics ✨ NEW</a>
+      <a href="#lesson9" onclick="closeMenu()" class="block px-6 py-3 text-blue-400 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">🔢 Lesson 9 - Enums ✨ NEW</a>
+      <a href="#lesson10" onclick="closeMenu()" class="block px-6 py-3 text-blue-400 hover:bg-gray-800 hover:text-white transition border-b border-gray-800">🛡️ Lesson 10 - Type Narrowing ✨ NEW</a>
+      <a href="#lesson11" onclick="closeMenu()" class="block px-6 py-3 text-blue-400 hover:bg-gray-800 hover:text-white transition">🗂️ Lesson 11 - Modules ✨ NEW</a>
+    </nav>
+  </header>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('active');
+      document.getElementById('menuBtn').classList.toggle('active');
+    }
+    function closeMenu() {
+      document.getElementById('mobileMenu').classList.remove('active');
+      document.getElementById('menuBtn').classList.remove('active');
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            closeMenu();
+            try { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            catch(err) { window.location.hash = this.getAttribute('href'); }
+          }
+        });
+      });
+    });
+  </script>
+
+  <!-- HERO -->
+  <section class="px-6 md:px-10 py-12 md:py-20 bg-gradient-to-b from-black to-[#141414]">
+    <h2 class="text-3xl md:text-5xl font-bold mb-4 md:mb-6">
+      Learn <span class="text-blue-600">TypeScript</span>
+    </h2>
+    <p class="text-gray-400 text-base md:text-lg max-w-2xl leading-relaxed mb-6">
+      A beginner-friendly course to learn TypeScript from zero.
+      Understand types, safer JavaScript, and modern development.
+    </p>
+    <div class="flex gap-4 flex-wrap">
+      <a href="#lesson1" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition">Start Learning</a>
+      <a href="#lesson7" class="bg-purple-700 hover:bg-purple-600 px-6 py-3 rounded-lg font-semibold transition">✨ New Lessons</a>
+    </div>
+  </section>
+
+  <!-- LESSON 1 -->
+  <section id="lesson1" class="px-6 md:px-10 py-12 md:py-16">
+    <h2 class="text-2xl md:text-3xl font-bold text-blue-500 mb-6 md:mb-8">Lesson 1 — What is TypeScript?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mb-10">
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">What is TypeScript?</h3>
+        <p class="text-gray-400 text-sm md:text-base">TypeScript is a programming language created by <span class="text-white font-semibold">Microsoft</span> in 2012. It is basically JavaScript with types.</p>
+        <p class="text-gray-400 mt-3 text-sm md:text-base">Types help developers catch errors <strong class="text-white">before running the program</strong>, making code more reliable and easier to maintain.</p>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">Example</h3>
+        <pre class="bg-black p-3 md:p-4 rounded text-green-400 text-xs md:text-sm">let age: number = 25;
+
+age = 30; // ✅ OK
+
+// age = "hello" ❌ error
+// Cannot assign string to number</pre>
+      </div>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🎯 Why Use TypeScript?</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div><h4 class="text-blue-400 font-semibold mb-2">✅ Catches Errors Early</h4><p class="text-gray-400 text-sm">Find bugs while coding, not in production</p></div>
+        <div><h4 class="text-blue-400 font-semibold mb-2">🚀 Better Code Completion</h4><p class="text-gray-400 text-sm">Your editor knows what properties exist</p></div>
+        <div><h4 class="text-blue-400 font-semibold mb-2">📚 Self-Documenting Code</h4><p class="text-gray-400 text-sm">Types explain what data is expected</p></div>
+        <div><h4 class="text-blue-400 font-semibold mb-2">🛡️ Safer Refactoring</h4><p class="text-gray-400 text-sm">Change code confidently without breaking things</p></div>
+      </div>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6">📦 Setup Your Environment</h3>
+      <ul class="space-y-5 text-gray-300">
+        <li><strong class="text-white text-base md:text-lg">1. Node.js</strong><p class="text-sm md:text-base mt-1">Download from <a href="https://nodejs.org" target="_blank" class="text-blue-400 hover:underline">nodejs.org</a></p></li>
+        <li><strong class="text-white text-base md:text-lg">2. Install TypeScript</strong><pre class="bg-black p-3 mt-2 rounded text-green-400 text-xs md:text-sm">npm install -g typescript</pre><p class="text-xs text-gray-400 mt-1">Verify: <code class="bg-black px-2 py-1 rounded">tsc --version</code></p></li>
+        <li><strong class="text-white text-base md:text-lg">3. Visual Studio Code</strong><p class="text-sm md:text-base mt-1">Download from <a href="https://code.visualstudio.com" target="_blank" class="text-blue-400 hover:underline">code.visualstudio.com</a></p></li>
+      </ul>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📝 Your First TypeScript File</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">Create <code class="bg-black px-2 py-1 rounded">hello.ts</code>:</p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm mb-4">function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+
+console.log(greet("World")); // Hello, World!</pre>
+      <p class="text-gray-400 mb-2 text-sm">Compile: <code class="bg-black px-2 py-1 rounded">tsc hello.ts</code> &nbsp; Run: <code class="bg-black px-2 py-1 rounded">node hello.js</code></p>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">⚡ Compilation Process</h3>
+      <div class="flex items-center justify-center gap-4 mb-4 flex-wrap">
+        <div class="bg-blue-900 px-4 py-2 rounded">hello.ts</div>
+        <div class="text-blue-400">→ tsc →</div>
+        <div class="bg-green-900 px-4 py-2 rounded">hello.js</div>
+      </div>
+      <p class="text-gray-400 text-sm md:text-base">TypeScript compiles to JavaScript. Type checking happens during compilation!</p>
+    </div>
+  </section>
+
+  <!-- LESSON 2 -->
+  <section id="lesson2" class="px-6 md:px-10 py-12 md:py-16 bg-[#0a0a0a]">
+    <h2 class="text-2xl md:text-3xl font-bold text-blue-500 mb-6 md:mb-8">Lesson 2 — Primitive Types</h2>
+    <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg mb-8">
+      <p class="text-gray-400 text-sm md:text-base leading-relaxed">In TypeScript, <strong class="text-white">primitives</strong> are the most basic types: <span class="text-white font-semibold">string</span>, <span class="text-white font-semibold">number</span>, <span class="text-white font-semibold">boolean</span>, <span class="text-white font-semibold">bigint</span>, <span class="text-white font-semibold">symbol</span>, <span class="text-white font-semibold">null</span>, and <span class="text-white font-semibold">undefined</span>.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg type-card">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">📝 string</h3>
+        <pre class="bg-black p-3 rounded text-green-400 text-xs">let name: string = "Ruth";
+let greeting = `Hello, ${name}!`;</pre>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg type-card">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">🔢 number</h3>
+        <pre class="bg-black p-3 rounded text-green-400 text-xs">let age: number = 20;
+let price: number = 9.99;
+let hex: number = 0xf00d;</pre>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg type-card">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">✅ boolean</h3>
+        <pre class="bg-black p-3 rounded text-green-400 text-xs">let isStudent: boolean = true;
+let isLoggedIn: boolean = false;</pre>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg type-card">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">🔟 bigint</h3>
+        <pre class="bg-black p-3 rounded text-green-400 text-xs">let big: bigint = 12345678901234n;</pre>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg type-card">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">🔑 symbol</h3>
+        <pre class="bg-black p-3 rounded text-green-400 text-xs">let id: symbol = Symbol("id");
+// Always unique</pre>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg type-card">
+        <h3 class="text-lg md:text-xl font-semibold mb-3">⚠️ null / undefined</h3>
+        <pre class="bg-black p-3 rounded text-green-400 text-xs">let empty: null = null;
+let notSet: undefined = undefined;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 3 -->
+  <section id="lesson3" class="px-6 md:px-10 py-12 md:py-16">
+    <h2 class="text-2xl md:text-3xl font-bold text-blue-500 mb-6 md:mb-8">Lesson 3 — Arrays & Tuples</h2>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📚 Arrays</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="text-blue-400 font-semibold mb-2">Method 1: Type[]</h4>
+          <pre class="bg-black p-4 rounded text-green-400 text-xs">let numbers: number[] = [1, 2, 3];
+let names: string[] = ["Alice", "Bob"];</pre>
+        </div>
+        <div>
+          <h4 class="text-blue-400 font-semibold mb-2">Method 2: Array&lt;Type&gt;</h4>
+          <pre class="bg-black p-4 rounded text-green-400 text-xs">let numbers: Array&lt;number&gt; = [1, 2, 3];
+let names: Array&lt;string&gt; = ["Alice", "Bob"];</pre>
+        </div>
+      </div>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🎯 Tuples</h3>
+      <p class="text-gray-400 mb-4 text-sm">Fixed length + specific types at each position.</p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">let person: [string, number] = ["Alice", 25];
+let color: [number, number, number] = [255, 0, 128];</pre>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔧 Common Array Methods</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">let fruits: string[] = ["apple", "banana", "orange"];
+
+fruits.push("grape");   // add to end
+fruits.pop();           // remove from end
+fruits.length;          // 3
+
+let upper = fruits.map(f => f.toUpperCase());
+let long  = fruits.filter(f => f.length > 5);</pre>
+    </div>
+  </section>
+
+  <!-- LESSON 4 -->
+  <section id="lesson4" class="px-6 md:px-10 py-12 md:py-16 bg-[#0a0a0a]">
+    <h2 class="text-2xl md:text-3xl font-bold text-blue-500 mb-6 md:mb-8">Lesson 4 — Objects & Interfaces</h2>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📦 Typing Objects</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">let user: { name: string; age: number } = {
+  name: "Alice",
+  age: 25
+};
+
+// Optional property
+let product: { name: string; discount?: number } = {
+  name: "Laptop"
+};</pre>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🎭 Interfaces</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">interface User {
+  name: string;
+  age: number;
+  email: string;
+  isActive?: boolean; // optional
+}
+
+let user1: User = { name: "Alice", age: 25, email: "alice@example.com" };</pre>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔒 Readonly & Methods</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">interface Product {
+  readonly id: number;
+  name: string;
+  price: number;
+  getDiscount(): number;
+}
+
+let laptop: Product = {
+  id: 101, name: "Laptop", price: 1000,
+  getDiscount() { return this.price * 0.1; }
+};
+
+// laptop.id = 102; ❌ readonly!</pre>
+    </div>
+  </section>
+
+  <!-- LESSON 5 -->
+  <section id="lesson5" class="px-6 md:px-10 py-12 md:py-16">
+    <h2 class="text-2xl md:text-3xl font-bold text-blue-500 mb-6 md:mb-8">Lesson 5 — Functions</h2>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🎯 Typing Functions</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">function add(a: number, b: number): number {
+  return a + b;
+}
+
+const multiply = (a: number, b: number): number => a * b;
+
+function log(message: string): void {
+  console.log(message);
+}</pre>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">⚙️ Optional & Default Parameters</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">function greet(name: string, title?: string): string {
+  return title ? `Hello, ${title} ${name}` : `Hello, ${name}`;
+}
+
+function createUser(name: string, role: string = "guest"): void {
+  console.log(`${name} is a ${role}`);
+}</pre>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📝 Rest Parameters</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">function sum(...numbers: number[]): number {
+  return numbers.reduce((total, n) => total + n, 0);
+}
+
+sum(1, 2, 3);        // 6
+sum(10, 20, 30, 40); // 100</pre>
+    </div>
+  </section>
+
+  <!-- LESSON 6 -->
+  <section id="lesson6" class="px-6 md:px-10 py-12 md:py-16 bg-[#0a0a0a]">
+    <h2 class="text-2xl md:text-3xl font-bold text-blue-500 mb-6 md:mb-8">Lesson 6 — Union Types & Type Aliases</h2>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔀 Union Types</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">let id: string | number;
+id = "ABC123";  // ✅
+id = 12345;     // ✅
+
+function printId(id: string | number): void {
+  console.log(`ID: ${id}`);
+}</pre>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🏷️ Type Aliases</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">type ID = string | number;
+
+type User = {
+  name: string;
+  age: number;
+};
+
+let user: User = { name: "Alice", age: 25 };</pre>
+    </div>
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🎯 Literal Types</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">type Status = "pending" | "approved" | "rejected";
+type Role = "admin" | "user" | "guest";
+
+let orderStatus: Status = "pending";   // ✅
+// orderStatus = "shipped";             ❌ Error</pre>
+    </div>
+  </section>
+
+  <!-- ===== LESSON 7 - CLASSES (NEW) ===== -->
+  <section id="lesson7" class="px-6 md:px-10 py-12 md:py-16">
+    <div class="flex items-center gap-3 mb-6 md:mb-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-blue-500">Lesson 7 — Classes</h2>
+      <span class="new-badge text-white">NEW</span>
+    </div>
+
+    <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg mb-8">
+      <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+        Classes are <strong class="text-white">blueprints for creating objects</strong>. TypeScript adds 
+        access modifiers and strong typing on top of JavaScript classes, making Object-Oriented Programming (OOP) 
+        safer and more expressive.
+      </p>
+    </div>
+
+    <!-- Basic Class -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🏗️ Basic Class</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">class Person {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age  = age;
+  }
+
+  greet(): string {
+    return `Hi, I'm ${this.name} and I'm ${this.age} years old.`;
+  }
+}
+
+const alice = new Person("Alice", 25);
+console.log(alice.greet()); // Hi, I'm Alice and I'm 25 years old.</pre>
+    </div>
+
+    <!-- Access Modifiers -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔐 Access Modifiers</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">
+        TypeScript provides three access modifiers to control visibility:
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-black p-4 rounded border border-green-800">
+          <h4 class="text-green-400 font-semibold mb-1">public</h4>
+          <p class="text-gray-400 text-xs">Accessible from anywhere (default)</p>
+        </div>
+        <div class="bg-black p-4 rounded border border-yellow-800">
+          <h4 class="text-yellow-400 font-semibold mb-1">private</h4>
+          <p class="text-gray-400 text-xs">Only accessible inside the class</p>
+        </div>
+        <div class="bg-black p-4 rounded border border-blue-800">
+          <h4 class="text-blue-400 font-semibold mb-1">protected</h4>
+          <p class="text-gray-400 text-xs">Accessible inside the class and subclasses</p>
+        </div>
+      </div>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">class BankAccount {
+  public owner: string;
+  private balance: number;
+
+  constructor(owner: string, initialBalance: number) {
+    this.owner   = owner;
+    this.balance = initialBalance;
+  }
+
+  deposit(amount: number): void {
+    this.balance += amount;
+  }
+
+  getBalance(): number {
+    return this.balance; // ✅ can access private inside class
+  }
+}
+
+const account = new BankAccount("Alice", 1000);
+account.deposit(500);
+console.log(account.getBalance()); // 1500
+// account.balance ❌ Error: balance is private</pre>
+    </div>
+
+    <!-- Shorthand Constructor -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">⚡ Shorthand Constructor</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">
+        TypeScript lets you declare and assign properties directly in the constructor parameters:
+      </p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">// Instead of this (verbose):
+class Dog {
+  name: string;
+  breed: string;
+  constructor(name: string, breed: string) {
+    this.name  = name;
+    this.breed = breed;
+  }
+}
+
+// Write this (shorthand):
+class Dog {
+  constructor(
+    public name: string,
+    public breed: string
+  ) {}
+}
+
+const rex = new Dog("Rex", "Labrador");
+console.log(rex.name); // Rex</pre>
+    </div>
+
+    <!-- Inheritance -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🧬 Inheritance</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">
+        Classes can <strong class="text-white">extend</strong> other classes to inherit their properties and methods:
+      </p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">class Animal {
+  constructor(public name: string) {}
+
+  speak(): string {
+    return `${this.name} makes a sound.`;
+  }
+}
+
+class Dog extends Animal {
+  constructor(name: string, public breed: string) {
+    super(name); // call parent constructor
+  }
+
+  speak(): string {
+    return `${this.name} barks!`; // override parent method
+  }
+}
+
+const dog = new Dog("Rex", "Labrador");
+console.log(dog.speak()); // Rex barks!</pre>
+    </div>
+
+    <!-- Getters & Setters -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔄 Getters & Setters</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">class Temperature {
+  private _celsius: number = 0;
+
+  get fahrenheit(): number {
+    return this._celsius * 9/5 + 32;
+  }
+
+  set celsius(value: number) {
+    if (value < -273.15) {
+      throw new Error("Temperature below absolute zero!");
+    }
+    this._celsius = value;
+  }
+}
+
+const temp = new Temperature();
+temp.celsius = 100;
+console.log(temp.fahrenheit); // 212</pre>
+    </div>
+
+    <!-- Abstract Classes -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🎭 Abstract Classes</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">
+        Abstract classes are <strong class="text-white">templates</strong> — they can't be instantiated directly.
+        Subclasses must implement abstract methods:
+      </p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">abstract class Shape {
+  abstract getArea(): number; // must be implemented
+
+  describe(): string {
+    return `This shape has area: ${this.getArea()}`;
+  }
+}
+
+class Circle extends Shape {
+  constructor(private radius: number) { super(); }
+
+  getArea(): number {
+    return Math.PI * this.radius ** 2;
+  }
+}
+
+class Rectangle extends Shape {
+  constructor(private w: number, private h: number) { super(); }
+
+  getArea(): number { return this.w * this.h; }
+}
+
+const c = new Circle(5);
+console.log(c.describe()); // This shape has area: 78.53...</pre>
+    </div>
+  </section>
+
+  <!-- ===== LESSON 8 - GENERICS (NEW) ===== -->
+  <section id="lesson8" class="px-6 md:px-10 py-12 md:py-16 bg-[#0a0a0a]">
+    <div class="flex items-center gap-3 mb-6 md:mb-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-blue-500">Lesson 8 — Generics</h2>
+      <span class="new-badge text-white">NEW</span>
+    </div>
+
+    <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg mb-8">
+      <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+        Generics let you write <strong class="text-white">reusable, type-safe code</strong> that works with 
+        different data types. Instead of writing the same function multiple times for each type, 
+        you write it once and let TypeScript figure out the type.
+      </p>
+    </div>
+
+    <!-- Basic Generic -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🧬 The Problem Generics Solve</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">// Without generics — we'd need a separate function per type:
+function getFirstNumber(arr: number[]): number { return arr[0]; }
+function getFirstString(arr: string[]): string { return arr[0]; }
+
+// With generics — ONE function handles ANY type:
+function getFirst&lt;T&gt;(arr: T[]): T {
+  return arr[0];
+}
+
+getFirst&lt;number&gt;([1, 2, 3]);      // returns 1 (number)
+getFirst&lt;string&gt;(["a", "b"]);    // returns "a" (string)
+getFirst([true, false]);           // TypeScript infers boolean!</pre>
+    </div>
+
+    <!-- Generic Interfaces -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📦 Generic Interfaces</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">interface ApiResponse&lt;T&gt; {
+  data: T;
+  success: boolean;
+  message: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+}
+
+// Response containing a User
+const userResponse: ApiResponse&lt;User&gt; = {
+  data: { name: "Alice", email: "alice@example.com" },
+  success: true,
+  message: "User found"
+};
+
+// Response containing a number
+const countResponse: ApiResponse&lt;number&gt; = {
+  data: 42,
+  success: true,
+  message: "Count retrieved"
+};</pre>
+    </div>
+
+    <!-- Generic Constraints -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔒 Generic Constraints</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">Use <code class="bg-black px-2 py-1 rounded">extends</code> to limit what types are allowed:</p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">// T must have a .length property
+function logLength&lt;T extends { length: number }&gt;(value: T): void {
+  console.log(value.length);
+}
+
+logLength("hello");       // 5 ✅ (strings have .length)
+logLength([1, 2, 3]);     // 3 ✅ (arrays have .length)
+// logLength(42);         // ❌ numbers don't have .length
+
+// Multiple type parameters
+function merge&lt;T, U&gt;(obj1: T, obj2: U): T & U {
+  return { ...obj1, ...obj2 } as T & U;
+}
+
+const merged = merge({ name: "Alice" }, { age: 25 });
+// merged is { name: string, age: number }</pre>
+    </div>
+  </section>
+
+  <!-- ===== LESSON 9 - ENUMS (NEW) ===== -->
+  <section id="lesson9" class="px-6 md:px-10 py-12 md:py-16">
+    <div class="flex items-center gap-3 mb-6 md:mb-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-blue-500">Lesson 9 — Enums</h2>
+      <span class="new-badge text-white">NEW</span>
+    </div>
+
+    <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg mb-8">
+      <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+        Enums (short for <strong class="text-white">enumerations</strong>) let you define a set of 
+        named constants. They make your code more readable by replacing magic numbers or strings 
+        with meaningful names.
+      </p>
+    </div>
+
+    <!-- Numeric Enums -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔢 Numeric Enums</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">enum Direction {
+  Up,    // 0
+  Down,  // 1
+  Left,  // 2
+  Right  // 3
+}
+
+let move: Direction = Direction.Up;
+console.log(move); // 0
+
+// Custom starting value
+enum Priority {
+  Low    = 1,
+  Medium = 2,
+  High   = 3
+}
+
+let taskPriority: Priority = Priority.High;
+console.log(taskPriority); // 3</pre>
+    </div>
+
+    <!-- String Enums -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📝 String Enums</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">String enums are more readable and preferred in most modern TypeScript code:</p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">enum Status {
+  Pending  = "PENDING",
+  Active   = "ACTIVE",
+  Inactive = "INACTIVE"
+}
+
+enum UserRole {
+  Admin  = "admin",
+  User   = "user",
+  Guest  = "guest"
+}
+
+function checkRole(role: UserRole): void {
+  if (role === UserRole.Admin) {
+    console.log("Welcome, admin!");
+  }
+}
+
+checkRole(UserRole.Admin); // Welcome, admin!</pre>
+    </div>
+
+    <!-- Const Enums -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">⚡ const Enums (Optimized)</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">
+        Adding <code class="bg-black px-2 py-1 rounded">const</code> before <code class="bg-black px-2 py-1 rounded">enum</code> 
+        tells TypeScript to inline the values at compile time for better performance:
+      </p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">const enum Color {
+  Red   = "RED",
+  Green = "GREEN",
+  Blue  = "BLUE"
+}
+
+let favoriteColor: Color = Color.Blue;
+// Compiles to: let favoriteColor = "BLUE"
+// The enum itself is removed from the output!</pre>
+    </div>
+  </section>
+
+  <!-- ===== LESSON 10 - TYPE NARROWING (NEW) ===== -->
+  <section id="lesson10" class="px-6 md:px-10 py-12 md:py-16 bg-[#0a0a0a]">
+    <div class="flex items-center gap-3 mb-6 md:mb-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-blue-500">Lesson 10 — Type Narrowing & Type Guards</h2>
+      <span class="new-badge text-white">NEW</span>
+    </div>
+
+    <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg mb-8">
+      <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+        Type narrowing is how TypeScript <strong class="text-white">figures out a more specific type</strong> 
+        from a broader one. This is essential when working with union types or values that could be 
+        different things.
+      </p>
+    </div>
+
+    <!-- typeof -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔍 typeof Guard</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">function formatValue(value: string | number): string {
+  if (typeof value === "string") {
+    // TypeScript knows value is a string here
+    return value.toUpperCase();
+  } else {
+    // TypeScript knows value is a number here
+    return value.toFixed(2);
+  }
+}
+
+console.log(formatValue("hello")); // "HELLO"
+console.log(formatValue(3.14159)); // "3.14"</pre>
+    </div>
+
+    <!-- instanceof -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🏛️ instanceof Guard</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">class Cat {
+  meow() { return "Meow!"; }
+}
+
+class Dog {
+  bark() { return "Woof!"; }
+}
+
+function makeSound(animal: Cat | Dog): string {
+  if (animal instanceof Cat) {
+    return animal.meow(); // TypeScript knows it's a Cat
+  }
+  return animal.bark();   // TypeScript knows it's a Dog
+}
+
+makeSound(new Cat()); // "Meow!"
+makeSound(new Dog()); // "Woof!"</pre>
+    </div>
+
+    <!-- in operator -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🗝️ "in" Operator Guard</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">interface Admin {
+  name: string;
+  adminLevel: number;
+}
+
+interface RegularUser {
+  name: string;
+  email: string;
+}
+
+function describeUser(user: Admin | RegularUser): string {
+  if ("adminLevel" in user) {
+    return `Admin level: ${user.adminLevel}`; // Admin
+  }
+  return `User email: ${user.email}`; // RegularUser
+}</pre>
+    </div>
+
+    <!-- Type Assertions -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🔖 Type Assertions (as)</h3>
+      <p class="text-gray-400 mb-4 text-sm md:text-base">
+        Sometimes <em>you</em> know more than TypeScript. Use <code class="bg-black px-2 py-1 rounded">as</code> to tell TypeScript the exact type:
+      </p>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">// When fetching from DOM
+const input = document.getElementById("username") as HTMLInputElement;
+console.log(input.value); // TypeScript now knows .value exists
+
+// When you know the data shape
+const data: unknown = { name: "Alice", age: 25 };
+const user = data as { name: string; age: number };
+console.log(user.name); // Alice
+
+// ⚠️ Use with caution — you take responsibility for the type!</pre>
+      <div class="bg-yellow-900/20 border border-yellow-600/30 p-4 rounded mt-4">
+        <p class="text-yellow-400 text-sm">⚠️ <strong>Warning:</strong> Type assertions bypass TypeScript's checks. Only use them when you're certain about the type.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LESSON 11 - MODULES (NEW) ===== -->
+  <section id="lesson11" class="px-6 md:px-10 py-12 md:py-16">
+    <div class="flex items-center gap-3 mb-6 md:mb-8">
+      <h2 class="text-2xl md:text-3xl font-bold text-blue-500">Lesson 11 — Modules & Organizing Code</h2>
+      <span class="new-badge text-white">NEW</span>
+    </div>
+
+    <div class="bg-[#1f1f1f] p-5 md:p-6 rounded-lg mb-8">
+      <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+        As your projects grow, you'll split code into <strong class="text-white">multiple files (modules)</strong>. 
+        TypeScript fully supports ES Modules — the modern way to organize and share code between files.
+      </p>
+    </div>
+
+    <!-- Export -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📤 Exporting</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">// math.ts
+
+// Named exports
+export function add(a: number, b: number): number {
+  return a + b;
+}
+
+export function subtract(a: number, b: number): number {
+  return a - b;
+}
+
+export const PI: number = 3.14159;
+
+// Default export (one per file)
+export default function multiply(a: number, b: number): number {
+  return a * b;
+}</pre>
+    </div>
+
+    <!-- Import -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📥 Importing</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">// app.ts
+
+// Import named exports
+import { add, subtract, PI } from "./math";
+
+// Import default export
+import multiply from "./math";
+
+// Import everything as a namespace
+import * as Math from "./math";
+
+console.log(add(2, 3));       // 5
+console.log(subtract(10, 4)); // 6
+console.log(PI);              // 3.14159
+console.log(multiply(3, 4));  // 12
+console.log(Math.add(1, 2));  // 3</pre>
+    </div>
+
+    <!-- Exporting Types -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg mb-8">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">🏷️ Exporting Types & Interfaces</h3>
+      <pre class="bg-black p-4 rounded text-green-400 text-xs md:text-sm">// types.ts
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export type Status = "active" | "inactive" | "banned";
+
+// userService.ts
+import type { User, Status } from "./types"; // import type (preferred)
+
+function getUser(id: number): User {
+  return { id, name: "Alice", email: "alice@example.com" };
+}</pre>
+    </div>
+
+    <!-- Project Structure -->
+    <div class="bg-[#1f1f1f] p-6 md:p-8 rounded-lg">
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">📁 Recommended Project Structure</h3>
+      <pre class="bg-black p-4 rounded text-blue-300 text-xs md:text-sm">my-project/
+├── src/
+│   ├── types/
+│   │   └── index.ts       ← all shared types & interfaces
+│   ├── utils/
+│   │   └── helpers.ts     ← utility functions
+│   ├── services/
+│   │   └── userService.ts ← business logic
+│   └── index.ts           ← main entry point
+├── tsconfig.json           ← TypeScript configuration
+└── package.json</pre>
+      <div class="mt-4 bg-blue-900/20 border border-blue-600/30 p-4 rounded">
+        <p class="text-blue-300 text-sm">💡 <strong>tsconfig.json</strong> controls how TypeScript compiles your project. Run <code class="bg-black px-2 py-1 rounded">tsc --init</code> to generate it automatically.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Next -->
+  <section class="px-6 md:px-10 py-12 md:py-16 bg-[#0a0a0a]">
+    <h2 class="text-2xl md:text-3xl font-bold text-blue-500 mb-6">🚀 What to Learn Next</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-[#1f1f1f] p-5 rounded-lg border border-gray-700">
+        <h3 class="text-white font-semibold mb-2">🔧 Utility Types</h3>
+        <p class="text-gray-400 text-sm">Partial&lt;T&gt;, Required&lt;T&gt;, Pick&lt;T&gt;, Omit&lt;T&gt;, Record&lt;K,V&gt; — TypeScript's built-in type helpers.</p>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 rounded-lg border border-gray-700">
+        <h3 class="text-white font-semibold mb-2">🗺️ Decorators</h3>
+        <p class="text-gray-400 text-sm">Special syntax to annotate classes and methods. Used heavily in frameworks like NestJS and Angular.</p>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 rounded-lg border border-gray-700">
+        <h3 class="text-white font-semibold mb-2">⚙️ tsconfig.json</h3>
+        <p class="text-gray-400 text-sm">Master compiler options like strict, target, module, and paths to configure your project properly.</p>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 rounded-lg border border-gray-700">
+        <h3 class="text-white font-semibold mb-2">⚛️ TypeScript + React</h3>
+        <p class="text-gray-400 text-sm">Typing React components, props, state, hooks, and events. The most common real-world use case.</p>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 rounded-lg border border-gray-700">
+        <h3 class="text-white font-semibold mb-2">🌐 TypeScript + Node.js</h3>
+        <p class="text-gray-400 text-sm">Build backend APIs with Express or NestJS using TypeScript for full type safety server-side.</p>
+      </div>
+      <div class="bg-[#1f1f1f] p-5 rounded-lg border border-gray-700">
+        <h3 class="text-white font-semibold mb-2">🔬 Advanced Types</h3>
+        <p class="text-gray-400 text-sm">Conditional types, mapped types, template literal types, and infer — for complex type logic.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="text-center py-8 md:py-10 text-gray-500 text-sm md:text-base border-t border-gray-800 mt-10">
+    <p>TypeScript Learning Page © 2026</p>
+    <p class="mt-2 text-xs">Built with ❤️ and Tailwind CSS</p>
+    <p class="mt-4 text-xs text-gray-600">11 Lessons · Classes · Generics · Enums · Type Guards · Modules</p>
+  </footer>
+
+</body>
+</html>

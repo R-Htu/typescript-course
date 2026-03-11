@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decorators — TS Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0a08;
+    --surface: #141210;
+    --card: #1a1714;
+    --border: #2a2520;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.15);
+    --red: #e05c5c;
+    --blue: #6ba3d6;
+    --green: #6dbb8a;
+    --text: #e8ddd0;
+    --muted: #7a6f64;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Subtle radial glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 880px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(12,10,8,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.05em; }
+  .nav-logo span { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.75rem; }
+  .back-btn {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    color: var(--muted); text-decoration: none;
+    border: 1px solid var(--border); padding: 7px 16px; border-radius: 3px; transition: all 0.2s;
+  }
+  .back-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+  .hero {
+    padding: 90px 0 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lesson-tag {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    color: var(--gold); letter-spacing: 0.25em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 900; line-height: 1.05; margin-bottom: 24px;
+  }
+  h1 em { color: var(--gold); font-style: italic; }
+  .hero-desc { font-size: 1rem; color: var(--muted); max-width: 520px; line-height: 1.8; font-weight: 300; }
+
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; margin-bottom: 28px;
+    color: var(--text);
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  h2 .num {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    color: var(--gold); letter-spacing: 0.15em;
+    border: 1px solid var(--border); padding: 4px 10px; border-radius: 3px;
+  }
+
+  h3 { font-family: 'DM Mono', monospace; font-size: 0.9rem; color: var(--gold); margin-bottom: 12px; }
+
+  p { color: var(--muted); line-height: 1.8; margin-bottom: 16px; font-size: 0.94rem; font-weight: 300; }
+  p strong { color: var(--text); font-weight: 500; }
+
+  .code-block {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden; margin: 24px 0;
+  }
+  .code-header {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 10px 18px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .code-filename { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+  .code-dots { display: flex; gap: 6px; }
+  .code-dots span { width: 9px; height: 9px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+
+  pre {
+    padding: 22px; font-family: 'DM Mono', monospace; font-size: 0.8rem;
+    line-height: 1.75; overflow-x: auto; color: var(--text); white-space: pre-wrap;
+  }
+  .kw { color: #e07070; } .type { color: var(--gold-light); }
+  .str { color: var(--green); } .cmt { color: var(--muted); font-style: italic; }
+  .dec { color: var(--gold); font-weight: 500; } .num { color: #8aacdb; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 24px 0; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 22px; transition: all 0.25s;
+  }
+  .card:hover { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.04); }
+  .card-title { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
+  .card-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
+
+  .highlight {
+    background: var(--gold-dim); border-left: 2px solid var(--gold);
+    padding: 16px 20px; border-radius: 0 4px 4px 0; margin: 20px 0;
+  }
+  .highlight p { margin: 0; color: #c4aa78; font-size: 0.88rem; }
+
+  .warn {
+    background: rgba(224,92,92,0.07); border-left: 2px solid var(--red);
+    padding: 16px 20px; border-radius: 0 4px 4px 0; margin: 20px 0;
+  }
+  .warn p { margin: 0; color: #d99090; font-size: 0.88rem; }
+
+  .divider {
+    width: 48px; height: 1px; background: var(--gold); opacity: 0.4; margin: 32px 0;
+  }
+
+  footer {
+    text-align: center; padding: 40px 28px;
+    font-family: 'DM Mono', monospace; font-size: 0.68rem;
+    color: var(--muted); letter-spacing: 0.08em;
+    border-top: 1px solid var(--border);
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  .hero { animation: fadeIn 0.7s ease both; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">TS Academy <span>· Decorators</span></div>
+  <a href="#" class="back-btn">← Back</a>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="lesson-tag">Advanced Lesson · 13</div>
+    <h1>Deco<em>rators</em></h1>
+    <p class="hero-desc">Special annotations that attach metadata or behaviour to classes, methods, and properties — the foundation of Angular and NestJS.</p>
+  </div>
+
+  <!-- WHAT ARE DECORATORS -->
+  <section>
+    <h2><span class="num">01</span> What Are Decorators?</h2>
+    <p>Decorators are <strong>functions that wrap other code</strong>. They start with <code>@</code> and are placed directly above a class, method, property, or parameter. When TypeScript sees a decorator, it calls that function and passes the decorated target to it.</p>
+
+    <div class="warn">
+      <p>⚠️ <strong>Enable decorators</strong> in tsconfig.json: set <code>"experimentalDecorators": true</code> and <code>"emitDecoratorMetadata": true</code>.</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-filename">tsconfig.json (required)</span>
+      </div>
+      <pre>{
+  "compilerOptions": {
+    "experimentalDecorators": <span class="kw">true</span>,
+    "emitDecoratorMetadata": <span class="kw">true</span>,
+    "target": <span class="str">"ES2021"</span>
+  }
+}</pre>
+    </div>
+  </section>
+
+  <!-- CLASS DECORATOR -->
+  <section>
+    <h2><span class="num">02</span> Class Decorators</h2>
+    <p>A class decorator is applied to the <strong>constructor</strong> of a class. It can add properties, replace the constructor, or just log information.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-filename">class-decorator.ts</span>
+      </div>
+      <pre><span class="cmt">// A simple class decorator</span>
+<span class="kw">function</span> <span class="dec">Sealed</span>(constructor: <span class="type">Function</span>) {
+  Object.seal(constructor);
+  Object.seal(constructor.prototype);
+}
+
+<span class="dec">@Sealed</span>
+<span class="kw">class</span> <span class="type">BankAccount</span> {
+  owner: <span class="type">string</span>;
+  constructor(owner: <span class="type">string</span>) {
+    this.owner = owner;
+  }
+}
+
+<span class="cmt">// Decorator with arguments (decorator factory)</span>
+<span class="kw">function</span> <span class="dec">Controller</span>(path: <span class="type">string</span>) {
+  <span class="kw">return function</span>(constructor: <span class="type">Function</span>) {
+    Reflect.defineMetadata(<span class="str">'path'</span>, path, constructor);
+  };
+}
+
+<span class="dec">@Controller</span>(<span class="str">'/users'</span>)
+<span class="kw">class</span> <span class="type">UserController</span> {
+  <span class="cmt">// handles routes starting with /users</span>
+}</pre>
+    </div>
+  </section>
+
+  <!-- METHOD DECORATOR -->
+  <section>
+    <h2><span class="num">03</span> Method Decorators</h2>
+    <p>Method decorators can <strong>intercept, wrap, or modify</strong> a method's behavior — perfect for logging, authorization checks, and caching.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-filename">method-decorator.ts</span>
+      </div>
+      <pre><span class="cmt">// Log every method call automatically</span>
+<span class="kw">function</span> <span class="dec">Log</span>(
+  target: <span class="type">any</span>,
+  key: <span class="type">string</span>,
+  descriptor: <span class="type">PropertyDescriptor</span>
+) {
+  <span class="kw">const</span> original = descriptor.value;
+
+  descriptor.value = <span class="kw">function</span>(...args: <span class="type">any</span>[]) {
+    console.log(<span class="str">`Calling ${key} with:`</span>, args);
+    <span class="kw">const</span> result = original.apply(<span class="kw">this</span>, args);
+    console.log(<span class="str">`${key} returned:`</span>, result);
+    <span class="kw">return</span> result;
+  };
+  <span class="kw">return</span> descriptor;
+}
+
+<span class="kw">class</span> <span class="type">Calculator</span> {
+  <span class="dec">@Log</span>
+  add(a: <span class="type">number</span>, b: <span class="type">number</span>): <span class="type">number</span> {
+    <span class="kw">return</span> a + b;
+  }
+}
+
+<span class="kw">const</span> calc = <span class="kw">new</span> <span class="type">Calculator</span>();
+calc.add(<span class="num">3</span>, <span class="num">4</span>);
+<span class="cmt">// → Calling add with: [3, 4]</span>
+<span class="cmt">// → add returned: 7</span></pre>
+    </div>
+  </section>
+
+  <!-- PROPERTY DECORATOR -->
+  <section>
+    <h2><span class="num">04</span> Property Decorators</h2>
+    <p>Property decorators are placed above class fields to <strong>add metadata or validation</strong>.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-filename">property-decorator.ts</span>
+      </div>
+      <pre><span class="kw">function</span> <span class="dec">MinLength</span>(min: <span class="type">number</span>) {
+  <span class="kw">return function</span>(target: <span class="type">any</span>, propertyKey: <span class="type">string</span>) {
+    <span class="kw">let</span> value: <span class="type">string</span>;
+
+    Object.defineProperty(target, propertyKey, {
+      get() { <span class="kw">return</span> value; },
+      set(newVal: <span class="type">string</span>) {
+        <span class="kw">if</span> (newVal.length &lt; min) {
+          <span class="kw">throw new</span> <span class="type">Error</span>(<span class="str">`${propertyKey} must be at least ${min} chars`</span>);
+        }
+        value = newVal;
+      }
+    });
+  };
+}
+
+<span class="kw">class</span> <span class="type">User</span> {
+  <span class="dec">@MinLength</span>(<span class="num">3</span>)
+  name: <span class="type">string</span> = <span class="str">""</span>;
+}
+
+<span class="kw">const</span> user = <span class="kw">new</span> <span class="type">User</span>();
+user.name = <span class="str">"Alice"</span>; <span class="cmt">// ✅</span>
+<span class="cmt">// user.name = "Al"; ❌ Error: name must be at least 3 chars</span></pre>
+    </div>
+  </section>
+
+  <!-- NESTJS EXAMPLE -->
+  <section>
+    <h2><span class="num">05</span> Real-World: NestJS</h2>
+    <p>NestJS uses decorators as its <strong>entire API</strong>. Here's how a real NestJS controller looks:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-filename">users.controller.ts (NestJS)</span>
+      </div>
+      <pre><span class="kw">import</span> { Controller, Get, Post, Body, Param } from <span class="str">'@nestjs/common'</span>;
+
+<span class="dec">@Controller</span>(<span class="str">'users'</span>)        <span class="cmt">// base route: /users</span>
+<span class="kw">export class</span> <span class="type">UsersController</span> {
+
+  <span class="dec">@Get</span>()                    <span class="cmt">// GET /users</span>
+  findAll() {
+    <span class="kw">return</span> [<span class="str">'alice'</span>, <span class="str">'bob'</span>];
+  }
+
+  <span class="dec">@Get</span>(<span class="str">':id'</span>)               <span class="cmt">// GET /users/:id</span>
+  findOne(<span class="dec">@Param</span>(<span class="str">'id'</span>) id: <span class="type">string</span>) {
+    <span class="kw">return</span> <span class="str">`User #${id}`</span>;
+  }
+
+  <span class="dec">@Post</span>()                   <span class="cmt">// POST /users</span>
+  create(<span class="dec">@Body</span>() body: <span class="type">CreateUserDto</span>) {
+    <span class="kw">return</span> body;
+  }
+}</pre>
+    </div>
+
+    <div class="highlight">
+      <p>🏛️ Every <code>@Get()</code>, <code>@Post()</code>, <code>@Body()</code> you see in NestJS is a decorator. That's the power of this feature.</p>
+    </div>
+  </section>
+
+  <!-- TYPES OF DECORATORS -->
+  <section>
+    <h2><span class="num">06</span> Types at a Glance</h2>
+    <div class="cards">
+      <div class="card"><div class="card-title">@ClassDecorator</div><div class="card-desc">Applied to the class constructor. Can seal, freeze, or augment the class.</div></div>
+      <div class="card"><div class="card-title">@MethodDecorator</div><div class="card-desc">Wraps a method. Receives target, key, and property descriptor.</div></div>
+      <div class="card"><div class="card-title">@PropertyDecorator</div><div class="card-desc">Applied to class fields. Receives target and property key.</div></div>
+      <div class="card"><div class="card-title">@ParameterDecorator</div><div class="card-desc">Applied to constructor/method parameters. Receives target, key, and index.</div></div>
+      <div class="card"><div class="card-title">@AccessorDecorator</div><div class="card-desc">Applied to getters/setters. Works like method decorators.</div></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>TS Academy · Decorators · Advanced Lesson 13</footer>
+</body>
+</html>
