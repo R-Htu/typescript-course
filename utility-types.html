@@ -266,7 +266,7 @@
 
 <nav>
   <div class="nav-logo">TS<span>/</span>ACADEMY <span style="color:var(--border)">|</span> <span>Utility Types</span></div>
-  <a href="#" class="back-btn">← Back</a>
+  <a href="index.html" class="back-btn">← Back to Course</a>
 </nav>
 
 <div class="container">
@@ -326,7 +326,7 @@
 }
 
 updateUser(<span class="num">1</span>, { name: <span class="str">"Alice"</span> });          <span class="cmt">// ✅ just name</span>
-updateUser(<span class="num">2</span>, { email: <span class="str">"new@email.com"</span> }); <span class="cmt">// ✅ just email</span>
+updateUser(<span class="num">2</span>, { email: <span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="620c071522070f030b0e4c010d0f">[email&#160;protected]</a>"</span> }); <span class="cmt">// ✅ just email</span>
 updateUser(<span class="num">3</span>, { age: <span class="num">30</span>, role: <span class="str">"admin"</span> }); <span class="cmt">// ✅ two fields</span>
 
 <span class="cmt">// Partial&lt;User&gt; is equivalent to:</span>
@@ -443,9 +443,7 @@ saveConfig({ host: <span class="str">"localhost"</span>, port: <span class="num"
   </section>
 
   <!-- EXCLUDE EXTRACT NONNULLABLE -->
-  <section>
-    <h2><span class="icon">🔬</span> Exclude, Extract & NonNullable</h2>
-    <p>These utility types work on <strong>union types</strong> to filter or narrow down the allowed values.</p>
+rk on <strong>union types</strong> to filter or narrow down the allowed values.</p>
 
     <div class="code-block">
       <div class="code-header">
@@ -504,6 +502,66 @@ saveConfig({ host: <span class="str">"localhost"</span>, port: <span class="num"
     </div>
   </section>
 
+</div>
+
+<!-- LESSON NAVIGATION -->
+<div style="border-top: 1px solid var(--border); padding: 48px 0; margin-top: 0;">
+  <div class="container">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+
+      <!-- Previous -->
+      <a href="lessons-7-to-11.html#lesson11" style="
+        display:inline-flex; align-items:center; gap:12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 16px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        flex: 1; min-width: 200px; max-width: 320px;
+      " onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.transform='translateX(-3px)'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateX(0)'">
+        <span style="font-size:1.4rem">←</span>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Previous</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;font-weight:600;color:var(--text)">Lesson 11 — Modules</div>
+        </div>
+      </a>
+
+      <!-- Lesson indicator -->
+      <div style="text-align:center; flex-shrink:0;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">You are here</div>
+        <div style="display:flex;gap:8px;align-items:center;justify-content:center;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:24px;height:8px;border-radius:4px;background:var(--cyan)"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--border)"></div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--cyan);margin-top:6px">12 / 17</div>
+      </div>
+
+      <!-- Next -->
+      <a href="decorators.html" style="
+        display:inline-flex; align-items:center; justify-content:flex-end; gap:12px;
+        background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(0,212,255,0.03));
+        border: 1px solid rgba(0,212,255,0.25);
+        padding: 16px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        flex: 1; min-width: 200px; max-width: 320px;
+      " onmouseover="this.style.borderColor='rgba(0,212,255,0.6)';this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 20px rgba(0,212,255,0.15)'"
+         onmouseout="this.style.borderColor='rgba(0,212,255,0.25)';this.style.transform='translateX(0)';this.style.boxShadow='none'">
+        <div style="text-align:right;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px">Next Lesson</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;font-weight:600;color:var(--text)">Lesson 13 — Decorators</div>
+        </div>
+        <span style="font-size:1.4rem;color:var(--cyan)">→</span>
+      </a>
+
+    </div>
+  </div>
 </div>
 
 <footer>TS Academy · Utility Types · Advanced Lesson 12</footer>

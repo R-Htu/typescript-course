@@ -120,7 +120,7 @@
 
 <nav>
   <div class="nav-logo"><span class="node-dot"></span> TypeScript + Node.js</div>
-  <a href="#" class="back-btn">← Back</a>
+  <a href="index.html" class="back-btn">← Back to Course</a>
 </nav>
 
 <div class="container">
@@ -178,7 +178,7 @@ app.use(express.json());
 }
 
 <span class="kw">const</span> users: <span class="type">User</span>[] = [
-  { id: <span class="num">1</span>, name: <span class="str">"Alice"</span>, email: <span class="str">"alice@example.com"</span> },
+  { id: <span class="num">1</span>, name: <span class="str">"Alice"</span>, email: <span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="84e5e8ede7e1c4e1fce5e9f4e8e1aae7ebe9">[email&#160;protected]</a>"</span> },
 ];
 
 <span class="cmt">// GET all users</span>
@@ -336,10 +336,53 @@ cd my-api && npm run start:dev</pre>
       <div class="card">
         <div class="card-title">Hono</div>
         <div class="card-desc">Ultra-lightweight, TypeScript-first, runs on Edge runtimes (Cloudflare Workers, Deno, Bun).</div>
-      </div>
+      <      </div>
     </div>
   </section>
 
+</div>
+
+<!-- LESSON NAVIGATION -->
+<div style="border-top:1px solid var(--border);padding:48px 24px;background:var(--surface);">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+
+      <a href="ts-react.html" style="display:inline-flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);padding:16px 22px;border-radius:8px;text-decoration:none;transition:all 0.2s;flex:1;min-width:200px;max-width:320px;"
+         onmouseover="this.style.borderColor='var(--node)';this.style.transform='translateX(-3px)'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateX(0)'">
+        <span style="font-size:1.3rem;color:var(--muted)">←</span>
+        <div>
+          <div style="font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Previous</div>
+          <div style="font-family:'Inconsolata',monospace;font-size:0.84rem;font-weight:500;color:var(--text)">Lesson 15 — TypeScript + React</div>
+        </div>
+      </a>
+
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">You are here</div>
+        <div style="display:flex;gap:7px;align-items:center;justify-content:center;">
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:22px;height:7px;border-radius:4px;background:var(--node)"></div>
+        </div>
+        <div style="font-family:'Inconsolata',monospace;font-size:0.68rem;color:var(--node);margin-top:7px;letter-spacing:0.08em">16 / 17</div>
+      </div>
+
+      <a href="advanced-types.html" style="display:inline-flex;align-items:center;justify-content:flex-end;gap:14px;background:rgba(104,160,99,0.06);border:1px solid rgba(104,160,99,0.22);padding:16px 22px;border-radius:8px;text-decoration:none;transition:all 0.2s;flex:1;min-width:200px;max-width:320px;"
+         onmouseover="this.style.borderColor='rgba(104,160,99,0.6)';this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 20px rgba(104,160,99,0.12)'"
+         onmouseout="this.style.borderColor='rgba(104,160,99,0.22)';this.style.transform='translateX(0)';this.style.boxShadow='none'">
+        <div style="text-align:right;">
+          <div style="font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--node);margin-bottom:4px">Next Lesson</div>
+          <div style="font-family:'Inconsolata',monospace;font-size:0.84rem;font-weight:500;color:var(--text)">Lesson 17 — Advanced Types</div>
+        </div>
+        <span style="font-size:1.3rem;color:var(--node)">→</span>
+      </a>
+
+    </div>
+  </div>
 </div>
 
 <footer>TS Academy · TypeScript + Node.js · Lesson 16</footer>

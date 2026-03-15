@@ -115,7 +115,7 @@
 
 <nav>
   <div class="nav-logo">TS<span>Academy</span> / tsconfig.json</div>
-  <a href="#" class="back-btn">← Back</a>
+  <a href="index.html" class="back-btn">← Back to Course</a>
 </nav>
 
 <div class="hero">
@@ -294,6 +294,67 @@
     </div>
   </section>
 
+</div>
+
+<!-- LESSON NAVIGATION -->
+<div style="border-top: 1px solid var(--border); padding: 48px 24px; background: var(--bg);">
+  <div class="container">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+
+      <!-- Previous -->
+      <a href="decorators.html" style="
+        display:inline-flex; align-items:center; gap:14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 16px 22px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        flex: 1; min-width: 200px; max-width: 320px;
+      " onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateX(-3px)'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateX(0)'">
+        <span style="font-size:1.3rem;color:var(--muted)">←</span>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Previous</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.84rem;font-weight:500;color:var(--text)">Lesson 13 — Decorators</div>
+        </div>
+      </a>
+
+      <!-- Lesson indicator -->
+      <div style="text-align:center; flex-shrink:0;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">You are here</div>
+        <div style="display:flex;gap:7px;align-items:center;justify-content:center;">
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+          <div style="width:22px;height:7px;border-radius:4px;background:var(--yellow)"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--border)"></div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--yellow);margin-top:7px;letter-spacing:0.08em">14 / 17</div>
+      </div>
+
+      <!-- Next -->
+      <a href="ts-react.html" style="
+        display:inline-flex; align-items:center; justify-content:flex-end; gap:14px;
+        background: rgba(88,166,255,0.06);
+        border: 1px solid rgba(88,166,255,0.22);
+        padding: 16px 22px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        flex: 1; min-width: 200px; max-width: 320px;
+      " onmouseover="this.style.borderColor='rgba(88,166,255,0.6)';this.style.transform='translateX(3px)';this.style.boxShadow='0 4px 20px rgba(88,166,255,0.12)'"
+         onmouseout="this.style.borderColor='rgba(88,166,255,0.22)';this.style.transform='translateX(0)';this.style.boxShadow='none'">
+        <div style="text-align:right;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:4px">Next Lesson</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.84rem;font-weight:500;color:var(--text)">Lesson 15 — TypeScript + React</div>
+        </div>
+        <span style="font-size:1.3rem;color:var(--blue)">→</span>
+      </a>
+
+    </div>
+  </div>
 </div>
 
 <footer>TS Academy · tsconfig.json · Lesson 14</footer>

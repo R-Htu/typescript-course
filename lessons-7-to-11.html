@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TS Academy — Intermediate (Lessons 7–11)</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inconsolata:wght@400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void:    #050810;
+    --deep:    #080d1a;
+    --surface: #0d1425;
+    --card:    #111c30;
+    --card2:   #0f1929;
+    --border:  rgba(99,179,237,0.12);
+    --border2: rgba(99,179,237,0.06);
+    --blue:    #3b82f6;
+    --cyan:    #22d3ee;
+    --purple:  #a78bfa;
+    --pink:    #f472b6;
+    --green:   #34d399;
+    --amber:   #fbbf24;
+    --text:    #e2e8f0;
+    --muted:   #64748b;
+    --dim:     #334155;
+    --code-bg: #020509;
+    --code-fg: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── ANIMATED BACKGROUND ── */
+  .bg-layer {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(59,130,246,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 110%, rgba(167,139,250,0.07) 0%, transparent 60%);
+  }
+  /* Animated grid */
+  .grid-layer {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ── SCANLINE EFFECT ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 999;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+    );
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(5,8,16,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+  .nav-logo-box {
+    width: 32px; height: 32px;
+    background: var(--blue);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.75rem; font-weight: 600; color: white;
+  }
+  .nav-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem; font-weight: 600; color: var(--text);
+  }
+  .nav-module {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.65rem; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    padding: 0 12px;
+    position: relative;
+  }
+  .nav-module::before, .nav-module::after {
+    content: ''; position: absolute; top: 50%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border));
+    width: 20px; transform: translateY(-50%);
+  }
+  .nav-module::before { right: 100%; }
+  .nav-module::after  { left: 100%; transform: translateY(-50%) scaleX(-1); }
+  .nav-links {
+    display: flex; gap: 2px; align-items: center;
+  }
+  .nav-links a {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.72rem; letter-spacing: 0.06em;
+    color: var(--muted); text-decoration: none;
+    padding: 6px 10px; border-radius: 5px;
+    transition: all 0.15s; border: 1px solid transparent;
+  }
+  .nav-links a:hover {
+    color: var(--cyan); border-color: var(--border);
+    background: rgba(34,211,238,0.05);
+  }
+  .mobile-btn {
+    display: none; background: none; border: none;
+    cursor: pointer; color: var(--text);
+  }
+  .mobile-menu {
+    display: none; position: fixed;
+    top: 60px; left: 0; right: 0; bottom: 0;
+    background: rgba(5,8,16,0.98); z-index: 99;
+    padding: 28px; overflow-y: auto;
+    border-top: 1px solid var(--border);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 0; border-bottom: 1px solid var(--border2);
+    color: var(--muted); text-decoration: none;
+    font-size: 0.95rem; transition: color 0.15s;
+  }
+  .mobile-menu a:hover { color: var(--cyan); }
+  .mobile-menu .lnum {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.7rem; color: var(--blue);
+    background: rgba(59,130,246,0.1);
+    padding: 2px 8px; border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 40px 72px;
+    position: relative; z-index: 1;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute;
+    right: -60px; top: -40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(10rem, 25vw, 22rem);
+    color: rgba(59,130,246,0.03);
+    line-height: 1; pointer-events: none;
+    letter-spacing: 0.02em;
+    user-select: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.25);
+    padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 28px;
+  }
+  .hero-badge span {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.7rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--blue);
+  }
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue);
+    animation: blink 2s ease infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(90deg, var(--blue) 0%, var(--cyan) 50%, var(--purple) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--muted); line-height: 1.7;
+    max-width: 500px; margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .hero-chips {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 7px 14px; border-radius: 6px;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.75rem; color: var(--muted);
+    transition: all 0.15s;
+  }
+  .chip:hover { border-color: rgba(99,179,237,0.3); color: var(--cyan); }
+  .chip.active { border-color: rgba(59,130,246,0.4); color: var(--blue); background: rgba(59,130,246,0.07); }
+
+  /* ── LESSON NAV STRIP ── */
+  .lesson-strip {
+    position: relative; z-index: 1;
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .lesson-strip::-webkit-scrollbar { display: none; }
+  .strip-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border-right: 1px solid var(--border);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .strip-item:hover { background: rgba(59,130,246,0.04); }
+  .strip-num {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.62rem; letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .strip-name {
+    font-size: 0.78rem; font-weight: 500;
+    color: var(--muted);
+  }
+  .strip-item:hover .strip-name { color: var(--cyan); }
+  .strip-item:hover .strip-num { color: var(--blue); }
+
+  /* ── LESSON ── */
+  .lesson {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto;
+    padding: 72px 40px;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  /* Lesson header */
+  .lesson-head {
+    display: flex; gap: 0; margin-bottom: 48px;
+    position: relative;
+  }
+  .lesson-head::before {
+    content: '';
+    position: absolute; left: -40px; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--blue) 0%, transparent 100%);
+    border-radius: 0 2px 2px 0;
+  }
+  .lesson-num-block {
+    margin-right: 24px;
+  }
+  .l-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 0.2em;
+    color: var(--blue);
+    display: block; margin-bottom: 2px;
+  }
+  .l-index {
+    font-family: 'Inconsolata', monospace;
+    font-size: 3.5rem; font-weight: 600;
+    color: var(--dim); line-height: 1;
+    letter-spacing: -0.03em;
+    transition: color 0.3s;
+    display: block;
+  }
+  .lesson:hover .l-index { color: rgba(59,130,246,0.3); }
+
+  .lesson-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700; line-height: 1.15;
+    color: var(--text); letter-spacing: -0.025em;
+    margin-bottom: 10px;
+  }
+  .lesson-title .new-badge {
+    display: inline-block;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    color: white; padding: 3px 8px; border-radius: 4px;
+    vertical-align: middle; margin-left: 10px;
+  }
+  .lesson-desc {
+    font-size: 0.95rem; color: var(--muted);
+    line-height: 1.7; font-weight: 300;
+    max-width: 560px; margin-top: 4px;
+  }
+
+  /* Code blocks */
+  .code-wrap {
+    background: var(--code-bg);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 24px 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .code-top {
+    background: rgba(255,255,255,0.025);
+    padding: 10px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .code-dots { display: flex; gap: 6px; }
+  .code-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .code-dot.r { background: #ff5f57; }
+  .code-dot.y { background: #febc2e; }
+  .code-dot.g { background: #28c840; }
+  .code-fname {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.68rem; color: rgba(226,232,240,0.25);
+    letter-spacing: 0.04em;
+  }
+  .code-wrap pre {
+    padding: 22px;
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.84rem; line-height: 1.75;
+    color: var(--code-fg);
+    white-space: pre-wrap; word-wrap: break-word;
+    overflow-x: auto;
+  }
+  .kw  { color: #93c5fd; }
+  .tp  { color: #fde68a; }
+  .str { color: #f9a8d4; }
+  .cm  { color: rgba(74,222,128,0.3); }
+  .err { color: #fca5a5; }
+  .cy  { color: #67e8f9; }
+
+  /* Info cards */
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 16px 0;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .info-card:hover {
+    border-color: rgba(99,179,237,0.25);
+    transform: translateX(4px);
+  }
+  .info-card h4 {
+    font-size: 0.9rem; font-weight: 600;
+    color: var(--text); margin-bottom: 8px;
+  }
+  .info-card p {
+    font-size: 0.84rem; color: var(--muted); line-height: 1.65;
+  }
+
+  /* Grid of cards */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px; margin: 20px 0;
+  }
+
+  /* Access modifier cards */
+  .mod-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin: 16px 0;
+  }
+  .mod-card {
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .mod-card:hover { transform: translateY(-2px); }
+  .mod-card h4 {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;
+  }
+  .mod-card p { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+  .mod-pub { border-color: rgba(52,211,153,0.2); background: rgba(52,211,153,0.04); }
+  .mod-pub h4 { color: var(--green); }
+  .mod-prv { border-color: rgba(248,113,113,0.2); background: rgba(248,113,113,0.04); }
+  .mod-prv h4 { color: #f87171; }
+  .mod-prt { border-color: rgba(251,191,36,0.2); background: rgba(251,191,36,0.04); }
+  .mod-prt h4 { color: var(--amber); }
+
+  /* Callout */
+  .note {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 16px 0;
+  }
+  .note.purple { border-left-color: var(--purple); }
+  .note.green  { border-left-color: var(--green); }
+  .note.amber  { border-left-color: var(--amber); }
+  .note p { font-size: 0.87rem; color: var(--muted); line-height: 1.65; }
+  .note p strong { color: var(--text); }
+  .note code {
+    font-family: 'Inconsolata', monospace;
+    background: rgba(255,255,255,0.06);
+    padding: 1px 6px; border-radius: 3px;
+    font-size: 0.85em; color: var(--cyan);
+  }
+
+  /* Divider */
+  .sect {
+    display: flex; align-items: center; gap: 14px;
+    margin: 32px 0 24px;
+  }
+  .sect-line { flex: 1; height: 1px; background: var(--border2); }
+  .sect-label {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.65rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--dim);
+  }
+
+  /* Comparison */
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin: 16px 0;
+  }
+
+  /* What's next */
+  .next-block {
+    position: relative; z-index: 1;
+    background: linear-gradient(135deg, var(--deep) 0%, #0d1a35 100%);
+    border-top: 1px solid var(--border);
+    padding: 72px 40px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .next-block::before {
+    content: 'NEXT';
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20rem; color: rgba(59,130,246,0.03);
+    pointer-events: none; white-space: nowrap;
+  }
+  .next-block h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; letter-spacing: 0.04em;
+    color: var(--text); margin-bottom: 12px;
+  }
+  .next-block p { color: var(--muted); margin-bottom: 32px; font-size: 0.95rem; }
+  .next-links {
+    display: flex; gap: 14px; justify-content: center;
+    flex-wrap: wrap;
+  }
+  .next-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 8px;
+    font-weight: 600; font-size: 0.88rem;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .next-btn.primary {
+    background: var(--blue); color: white;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+  }
+  .next-btn.primary:hover {
+    background: #2563eb;
+    box-shadow: 0 6px 28px rgba(59,130,246,0.45);
+    transform: translateY(-1px);
+  }
+  .next-btn.secondary {
+    background: var(--card); color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .next-btn.secondary:hover { color: var(--text); border-color: rgba(99,179,237,0.3); }
+
+  /* Footer */
+  footer {
+    position: relative; z-index: 1;
+    background: var(--void);
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-brand {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--blue); letter-spacing: 0.06em;
+  }
+  .footer-info {
+    font-family: 'Inconsolata', monospace;
+    font-size: 0.65rem; color: var(--dim); letter-spacing: 0.06em;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .nav-module { display: none; }
+    .mobile-btn { display: block; }
+    .hero { padding: 52px 20px 44px; }
+    .hero-bg-text { display: none; }
+    .lesson { padding: 52px 20px; }
+    .lesson-head::before { left: -20px; }
+    .compare { grid-template-columns: 1fr; }
+    .mod-grid { grid-template-columns: 1fr; }
+    .next-block { padding: 52px 20px; }
+    .next-block::before { display: none; }
+    footer { flex-direction: column; gap: 8px; text-align: center; padding: 20px; }
+  }
+
+  /* Fade in */
+  .reveal {
+    opacity: 1;
+    animation: revealFade 0.55s ease both;
+  }
+  @keyframes revealFade {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="grid-layer"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo-box">TS</div>
+    <span class="nav-title">Academy</span>
+  </a>
+  <span class="nav-module">Intermediate</span>
+  <div class="nav-links">
+    <a href="#lesson7">L7</a>
+    <a href="#lesson8">L8</a>
+    <a href="#lesson9">L9</a>
+    <a href="#lesson10">L10</a>
+    <a href="#lesson11">L11</a>
+  </div>
+  <button class="mobile-btn" onclick="toggleMobile()" id="mobileBtn">
+    <svg id="mIcon" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+    <svg id="cIcon" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#lesson7" onclick="closeMobile()"><span class="lnum">L07</span>Classes</a>
+  <a href="#lesson8" onclick="closeMobile()"><span class="lnum">L08</span>Generics</a>
+  <a href="#lesson9" onclick="closeMobile()"><span class="lnum">L09</span>Enums</a>
+  <a href="#lesson10" onclick="closeMobile()"><span class="lnum">L10</span>Type Narrowing</a>
+  <a href="#lesson11" onclick="closeMobile()"><span class="lnum">L11</span>Modules</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg-text">INTER</div>
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    <span>Module 2 — Intermediate Track</span>
+  </div>
+  <h1><span class="grad">Level</span><br>Up.</h1>
+  <p class="hero-desc">Five intermediate lessons covering Classes, Generics, Enums, Type Narrowing, and Modules — the concepts that separate beginners from TypeScript developers.</p>
+  <div class="hero-chips">
+    <div class="chip active">🏛️ Classes</div>
+    <div class="chip">🧬 Generics</div>
+    <div class="chip">🔢 Enums</div>
+    <div class="chip">🛡️ Type Narrowing</div>
+    <div class="chip">🗂️ Modules</div>
+  </div>
+</div>
+
+<!-- LESSON STRIP -->
+<div class="lesson-strip">
+  <a href="#lesson7" class="strip-item">
+    <span class="strip-num">07</span><span class="strip-name">Classes</span>
+  </a>
+  <a href="#lesson8" class="strip-item">
+    <span class="strip-num">08</span><span class="strip-name">Generics</span>
+  </a>
+  <a href="#lesson9" class="strip-item">
+    <span class="strip-num">09</span><span class="strip-name">Enums</span>
+  </a>
+  <a href="#lesson10" class="strip-item">
+    <span class="strip-num">10</span><span class="strip-name">Type Narrowing</span>
+  </a>
+  <a href="#lesson11" class="strip-item">
+    <span class="strip-num">11</span><span class="strip-name">Modules</span>
+  </a>
+</div>
+
+<!-- ══════════════ LESSON 7 ══════════════ -->
+<section id="lesson7" class="lesson">
+  <div class="lesson-head reveal">
+    <div class="lesson-num-block">
+      <span class="l-num">LESSON</span>
+      <span class="l-index">07</span>
+    </div>
+    <div>
+      <div class="lesson-title">Classes <span class="new-badge">NEW</span></div>
+      <p class="lesson-desc">Blueprints for creating objects — TypeScript supercharges OOP with access modifiers and strict typing.</p>
+    </div>
+  </div>
+
+  <div class="note reveal">
+    <p>Classes are <strong>blueprints for creating objects</strong>. TypeScript adds access modifiers and strong typing on top of JavaScript classes, making Object-Oriented Programming safer and more expressive.</p>
+  </div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">person.ts</span>
+    </div>
+    <pre><span class="kw">class</span> <span class="cy">Person</span> {
+  name: <span class="tp">string</span>;
+  age: <span class="tp">number</span>;
+
+  <span class="kw">constructor</span>(name: <span class="tp">string</span>, age: <span class="tp">number</span>) {
+    <span class="kw">this</span>.name = name;
+    <span class="kw">this</span>.age  = age;
+  }
+
+  greet(): <span class="tp">string</span> {
+    <span class="kw">return</span> <span class="str">`Hi, I'm ${this.name} and I'm ${this.age}.`</span>;
+  }
+}
+
+<span class="kw">const</span> alice = <span class="kw">new</span> <span class="cy">Person</span>(<span class="str">"Alice"</span>, 25);
+console.log(alice.greet()); <span class="cm">// Hi, I'm Alice and I'm 25.</span></pre>
+  </div>
+
+  <div class="sect reveal"><div class="sect-line"></div><div class="sect-label">Access Modifiers</div><div class="sect-line"></div></div>
+
+  <div class="mod-grid reveal">
+    <div class="mod-card mod-pub">
+      <h4>public</h4>
+      <p>Accessible from anywhere (default)</p>
+    </div>
+    <div class="mod-card mod-prv">
+      <h4>private</h4>
+      <p>Only accessible inside the class</p>
+    </div>
+    <div class="mod-card mod-prt">
+      <h4>protected</h4>
+      <p>Class and its subclasses only</p>
+    </div>
+  </div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">bank-account.ts</span>
+    </div>
+    <pre><span class="kw">class</span> <span class="cy">BankAccount</span> {
+  <span class="kw">public</span> owner: <span class="tp">string</span>;
+  <span class="kw">private</span> balance: <span class="tp">number</span>;
+
+  <span class="kw">constructor</span>(owner: <span class="tp">string</span>, initialBalance: <span class="tp">number</span>) {
+    <span class="kw">this</span>.owner   = owner;
+    <span class="kw">this</span>.balance = initialBalance;
+  }
+
+  deposit(amount: <span class="tp">number</span>): <span class="tp">void</span> {
+    <span class="kw">this</span>.balance += amount;
+  }
+
+  getBalance(): <span class="tp">number</span> {
+    <span class="kw">return</span> <span class="kw">this</span>.balance; <span class="cm">// ✅ private access inside class</span>
+  }
+}
+
+<span class="kw">const</span> acc = <span class="kw">new</span> <span class="cy">BankAccount</span>(<span class="str">"Alice"</span>, 1000);
+acc.deposit(500);
+console.log(acc.getBalance()); <span class="cm">// 1500</span>
+<span class="cm">// acc.balance ❌ Error — private!</span></pre>
+  </div>
+
+  <div class="sect reveal"><div class="sect-line"></div><div class="sect-label">Shorthand + Inheritance</div><div class="sect-line"></div></div>
+
+  <div class="compare reveal">
+    <div>
+      <p style="font-family:'Inconsolata',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px">Verbose way</p>
+      <div class="code-wrap" style="margin:0">
+        <pre style="padding:16px;font-size:0.78rem"><span class="kw">class</span> <span class="cy">Dog</span> {
+  name: <span class="tp">string</span>;
+  breed: <span class="tp">string</span>;
+  <span class="kw">constructor</span>(
+    name: <span class="tp">string</span>,
+    breed: <span class="tp">string</span>
+  ) {
+    <span class="kw">this</span>.name  = name;
+    <span class="kw">this</span>.breed = breed;
+  }
+}</pre>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Inconsolata',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px">✨ Shorthand way</p>
+      <div class="code-wrap" style="margin:0">
+        <pre style="padding:16px;font-size:0.78rem"><span class="kw">class</span> <span class="cy">Dog</span> {
+  <span class="kw">constructor</span>(
+    <span class="kw">public</span> name: <span class="tp">string</span>,
+    <span class="kw">public</span> breed: <span class="tp">string</span>
+  ) {}
+}
+
+<span class="cm">// Same result — much cleaner!</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">inheritance.ts</span>
+    </div>
+    <pre><span class="kw">class</span> <span class="cy">Animal</span> {
+  <span class="kw">constructor</span>(<span class="kw">public</span> name: <span class="tp">string</span>) {}
+  speak(): <span class="tp">string</span> { <span class="kw">return</span> <span class="str">`${this.name} makes a sound.`</span>; }
+}
+
+<span class="kw">class</span> <span class="cy">Dog</span> <span class="kw">extends</span> <span class="cy">Animal</span> {
+  <span class="kw">constructor</span>(name: <span class="tp">string</span>, <span class="kw">public</span> breed: <span class="tp">string</span>) {
+    <span class="kw">super</span>(name); <span class="cm">// call parent constructor</span>
+  }
+  speak(): <span class="tp">string</span> { <span class="kw">return</span> <span class="str">`${this.name} barks!`</span>; }
+}
+
+<span class="kw">const</span> dog = <span class="kw">new</span> <span class="cy">Dog</span>(<span class="str">"Rex"</span>, <span class="str">"Labrador"</span>);
+console.log(dog.speak()); <span class="cm">// Rex barks!</span></pre>
+  </div>
+
+  <div class="sect reveal"><div class="sect-line"></div><div class="sect-label">Abstract classes</div><div class="sect-line"></div></div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">abstract.ts</span>
+    </div>
+    <pre><span class="kw">abstract class</span> <span class="cy">Shape</span> {
+  <span class="kw">abstract</span> getArea(): <span class="tp">number</span>; <span class="cm">// must be implemented by subclass</span>
+
+  describe(): <span class="tp">string</span> {
+    <span class="kw">return</span> <span class="str">`Area: ${this.getArea()}`</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="cy">Circle</span> <span class="kw">extends</span> <span class="cy">Shape</span> {
+  <span class="kw">constructor</span>(<span class="kw">private</span> radius: <span class="tp">number</span>) { <span class="kw">super</span>(); }
+  getArea(): <span class="tp">number</span> { <span class="kw">return</span> Math.PI * <span class="kw">this</span>.radius ** 2; }
+}
+
+<span class="kw">const</span> c = <span class="kw">new</span> <span class="cy">Circle</span>(5);
+console.log(c.describe()); <span class="cm">// Area: 78.53...</span></pre>
+  </div>
+</section>
+
+<!-- ══════════════ LESSON 8 ══════════════ -->
+<section id="lesson8" class="lesson">
+  <div class="lesson-head reveal">
+    <div class="lesson-num-block">
+      <span class="l-num">LESSON</span>
+      <span class="l-index">08</span>
+    </div>
+    <div>
+      <div class="lesson-title">Generics <span class="new-badge">NEW</span></div>
+      <p class="lesson-desc">Write once, work with any type — the secret to truly reusable TypeScript code.</p>
+    </div>
+  </div>
+
+  <div class="note purple reveal">
+    <p><strong>Generics</strong> let you write reusable, type-safe code that works with different data types. Instead of writing the same function multiple times for each type, you write it once using <code>&lt;T&gt;</code>.</p>
+  </div>
+
+  <div class="compare reveal">
+    <div>
+      <p style="font-family:'Inconsolata',monospace;font-size:0.68rem;color:#f87171;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px">❌ Without generics</p>
+      <div class="code-wrap" style="margin:0">
+        <pre style="padding:16px;font-size:0.78rem"><span class="kw">function</span> getFirstNum(
+  arr: <span class="tp">number</span>[]
+): <span class="tp">number</span> {
+  <span class="kw">return</span> arr[0];
+}
+<span class="kw">function</span> getFirstStr(
+  arr: <span class="tp">string</span>[]
+): <span class="tp">string</span> {
+  <span class="kw">return</span> arr[0];
+}
+<span class="cm">// Duplicate code!</span></pre>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Inconsolata',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px">✅ With generics</p>
+      <div class="code-wrap" style="margin:0">
+        <pre style="padding:16px;font-size:0.78rem"><span class="kw">function</span> getFirst&lt;<span class="tp">T</span>&gt;(
+  arr: <span class="tp">T</span>[]
+): <span class="tp">T</span> {
+  <span class="kw">return</span> arr[0];
+}
+
+getFirst([1, 2, 3]);    <span class="cm">// number</span>
+getFirst([<span class="str">"a"</span>,<span class="str">"b"</span>]);  <span class="cm">// string</span>
+getFirst([<span class="kw">true</span>]);     <span class="cm">// boolean</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="sect reveal"><div class="sect-line"></div><div class="sect-label">Generic interfaces</div><div class="sect-line"></div></div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">api-response.ts</span>
+    </div>
+    <pre><span class="kw">interface</span> <span class="cy">ApiResponse</span>&lt;<span class="tp">T</span>&gt; {
+  data: <span class="tp">T</span>;
+  success: <span class="tp">boolean</span>;
+  message: <span class="tp">string</span>;
+}
+
+<span class="kw">interface</span> <span class="cy">User</span> {
+  name: <span class="tp">string</span>;
+  email: <span class="tp">string</span>;
+}
+
+<span class="cm">// Response containing a User</span>
+<span class="kw">const</span> userRes: <span class="cy">ApiResponse</span>&lt;<span class="cy">User</span>&gt; = {
+  data: { name: <span class="str">"Alice"</span>, email: <span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e7868b8e8482a7829f868a978b82c984888a">[email&#160;protected]</a>"</span> },
+  success: <span class="kw">true</span>,
+  message: <span class="str">"User found"</span>
+};
+
+<span class="cm">// Response containing a number</span>
+<span class="kw">const</span> countRes: <span class="cy">ApiResponse</span>&lt;<span class="tp">number</span>&gt; = {
+  data: 42,
+  success: <span class="kw">true</span>,
+  message: <span class="str">"Count retrieved"</span>
+};</pre>
+  </div>
+
+  <div class="sect reveal"><div class="sect-line"></div><div class="sect-label">Constraints with extends</div><div class="sect-line"></div></div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">constraints.ts</span>
+    </div>
+    <pre><span class="cm">// T must have a .length property</span>
+<span class="kw">function</span> logLength&lt;<span class="tp">T</span> <span class="kw">extends</span> { length: <span class="tp">number</span> }&gt;(value: <span class="tp">T</span>): <span class="tp">void</span> {
+  console.log(value.length);
+}
+
+logLength(<span class="str">"hello"</span>);       <span class="cm">// 5 ✅ strings have .length</span>
+logLength([1, 2, 3]);     <span class="cm">// 3 ✅ arrays have .length</span>
+<span class="cm">// logLength(42);         ❌ numbers don't have .length</span>
+
+<span class="cm">// Multiple type parameters</span>
+<span class="kw">function</span> merge&lt;<span class="tp">T</span>, <span class="tp">U</span>&gt;(obj1: <span class="tp">T</span>, obj2: <span class="tp">U</span>): <span class="tp">T</span> & <span class="tp">U</span> {
+  <span class="kw">return</span> { ...obj1, ...obj2 } <span class="kw">as</span> <span class="tp">T</span> & <span class="tp">U</span>;
+}
+
+<span class="kw">const</span> merged = merge({ name: <span class="str">"Alice"</span> }, { age: 25 });
+<span class="cm">// merged: { name: string, age: number }</span></pre>
+  </div>
+</section>
+
+<!-- ══════════════ LESSON 9 ══════════════ -->
+<section id="lesson9" class="lesson">
+  <div class="lesson-head reveal">
+    <div class="lesson-num-block">
+      <span class="l-num">LESSON</span>
+      <span class="l-index">09</span>
+    </div>
+    <div>
+      <div class="lesson-title">Enums <span class="new-badge">NEW</span></div>
+      <p class="lesson-desc">Named constants that make your code readable — goodbye magic strings and numbers.</p>
+    </div>
+  </div>
+
+  <div class="note amber reveal">
+    <p><strong>Enums</strong> (enumerations) let you define a set of named constants. They replace "magic" values with meaningful names, making code self-documenting.</p>
+  </div>
+
+  <div class="cards-grid reveal">
+    <div class="info-card" style="border-left:2px solid var(--blue)">
+      <h4 style="color:var(--blue)">Numeric Enums</h4>
+      <p>Default: auto-numbered from 0. Or set a custom start value.</p>
+    </div>
+    <div class="info-card" style="border-left:2px solid var(--cyan)">
+      <h4 style="color:var(--cyan)">String Enums</h4>
+      <p>Explicit string values. More debuggable and preferred in modern TS.</p>
+    </div>
+    <div class="info-card" style="border-left:2px solid var(--purple)">
+      <h4 style="color:var(--purple)">Const Enums</h4>
+      <p>Inlined at compile time. Zero runtime cost — best performance.</p>
+    </div>
+  </div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">enums.ts</span>
+    </div>
+    <pre><span class="cm">// Numeric enum — auto-numbered</span>
+<span class="kw">enum</span> <span class="cy">Direction</span> {
+  Up,    <span class="cm">// 0</span>
+  Down,  <span class="cm">// 1</span>
+  Left,  <span class="cm">// 2</span>
+  Right  <span class="cm">// 3</span>
+}
+
+<span class="kw">let</span> move: <span class="cy">Direction</span> = <span class="cy">Direction</span>.Up;
+console.log(move); <span class="cm">// 0</span>
+
+<span class="cm">// String enum — preferred!</span>
+<span class="kw">enum</span> <span class="cy">Status</span> {
+  Pending  = <span class="str">"PENDING"</span>,
+  Active   = <span class="str">"ACTIVE"</span>,
+  Inactive = <span class="str">"INACTIVE"</span>
+}
+
+<span class="kw">enum</span> <span class="cy">UserRole</span> {
+  Admin = <span class="str">"admin"</span>,
+  User  = <span class="str">"user"</span>,
+  Guest = <span class="str">"guest"</span>
+}
+
+<span class="kw">function</span> checkRole(role: <span class="cy">UserRole</span>): <span class="tp">void</span> {
+  <span class="kw">if</span> (role === <span class="cy">UserRole</span>.Admin) {
+    console.log(<span class="str">"Welcome, admin!"</span>);
+  }
+}
+
+<span class="cm">// const enum — compiled away for performance</span>
+<span class="kw">const enum</span> <span class="cy">Color</span> {
+  Red = <span class="str">"RED"</span>, Green = <span class="str">"GREEN"</span>, Blue = <span class="str">"BLUE"</span>
+}
+
+<span class="kw">let</span> fav: <span class="cy">Color</span> = <span class="cy">Color</span>.Blue;
+<span class="cm">// Compiles to: let fav = "BLUE" — no enum object!</span></pre>
+  </div>
+</section>
+
+<!-- ══════════════ LESSON 10 ══════════════ -->
+<section id="lesson10" class="lesson">
+  <div class="lesson-head reveal">
+    <div class="lesson-num-block">
+      <span class="l-num">LESSON</span>
+      <span class="l-index">10</span>
+    </div>
+    <div>
+      <div class="lesson-title">Type Narrowing <span class="new-badge">NEW</span></div>
+      <p class="lesson-desc">Teach TypeScript to figure out the exact type from a broad one — essential for union types.</p>
+    </div>
+  </div>
+
+  <div class="note green reveal">
+    <p><strong>Type narrowing</strong> is how TypeScript figures out a more specific type from a broader one. This is essential when working with union types or values that could be different things at runtime.</p>
+  </div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">typeof-guard.ts</span>
+    </div>
+    <pre><span class="cm">// typeof guard — for primitives</span>
+<span class="kw">function</span> formatValue(value: <span class="tp">string</span> | <span class="tp">number</span>): <span class="tp">string</span> {
+  <span class="kw">if</span> (<span class="kw">typeof</span> value === <span class="str">"string"</span>) {
+    <span class="cm">// TypeScript knows: value is string here</span>
+    <span class="kw">return</span> value.toUpperCase();
+  } <span class="kw">else</span> {
+    <span class="cm">// TypeScript knows: value is number here</span>
+    <span class="kw">return</span> value.toFixed(2);
+  }
+}
+
+console.log(formatValue(<span class="str">"hello"</span>)); <span class="cm">// "HELLO"</span>
+console.log(formatValue(3.14159)); <span class="cm">// "3.14"</span></pre>
+  </div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">instanceof-guard.ts</span>
+    </div>
+    <pre><span class="cm">// instanceof guard — for classes</span>
+<span class="kw">class</span> <span class="cy">Cat</span> { meow() { <span class="kw">return</span> <span class="str">"Meow!"</span>; } }
+<span class="kw">class</span> <span class="cy">Dog</span> { bark() { <span class="kw">return</span> <span class="str">"Woof!"</span>; } }
+
+<span class="kw">function</span> makeSound(animal: <span class="cy">Cat</span> | <span class="cy">Dog</span>): <span class="tp">string</span> {
+  <span class="kw">if</span> (animal <span class="kw">instanceof</span> <span class="cy">Cat</span>) {
+    <span class="kw">return</span> animal.meow(); <span class="cm">// TS knows: Cat</span>
+  }
+  <span class="kw">return</span> animal.bark();   <span class="cm">// TS knows: Dog</span>
+}
+
+makeSound(<span class="kw">new</span> <span class="cy">Cat</span>()); <span class="cm">// "Meow!"</span>
+makeSound(<span class="kw">new</span> <span class="cy">Dog</span>()); <span class="cm">// "Woof!"</span></pre>
+  </div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">in-operator.ts</span>
+    </div>
+    <pre><span class="cm">// "in" guard — check if property exists</span>
+<span class="kw">interface</span> <span class="cy">Admin</span>       { name: <span class="tp">string</span>; adminLevel: <span class="tp">number</span>; }
+<span class="kw">interface</span> <span class="cy">RegularUser</span> { name: <span class="tp">string</span>; email: <span class="tp">string</span>; }
+
+<span class="kw">function</span> describeUser(user: <span class="cy">Admin</span> | <span class="cy">RegularUser</span>): <span class="tp">string</span> {
+  <span class="kw">if</span> (<span class="str">"adminLevel"</span> <span class="kw">in</span> user) {
+    <span class="kw">return</span> <span class="str">`Admin level: ${user.adminLevel}`</span>; <span class="cm">// Admin</span>
+  }
+  <span class="kw">return</span> <span class="str">`Email: ${user.email}`</span>; <span class="cm">// RegularUser</span>
+}
+
+<span class="cm">// Type assertion with "as" — use carefully!</span>
+<span class="kw">const</span> input = document.getElementById(<span class="str">"name"</span>) <span class="kw">as</span> HTMLInputElement;
+console.log(input.value); <span class="cm">// TS now knows .value exists</span></pre>
+  </div>
+</section>
+
+<!-- ══════════════ LESSON 11 ══════════════ -->
+<section id="lesson11" class="lesson">
+  <div class="lesson-head reveal">
+    <div class="lesson-num-block">
+      <span class="l-num">LESSON</span>
+      <span class="l-index">11</span>
+    </div>
+    <div>
+      <div class="lesson-title">Modules <span class="new-badge">NEW</span></div>
+      <p class="lesson-desc">Split your code across files — the modern way to organize growing TypeScript projects.</p>
+    </div>
+  </div>
+
+  <div class="note reveal">
+    <p>As your projects grow, you'll split code into <strong>multiple files (modules)</strong>. TypeScript fully supports ES Modules — the modern standard for sharing code between files.</p>
+  </div>
+
+  <div class="compare reveal">
+    <div>
+      <p style="font-family:'Inconsolata',monospace;font-size:0.68rem;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px">📤 Exporting</p>
+      <div class="code-wrap" style="margin:0">
+        <pre style="padding:16px;font-size:0.78rem"><span class="cm">// math.ts</span>
+<span class="kw">export function</span> add(
+  a: <span class="tp">number</span>, b: <span class="tp">number</span>
+): <span class="tp">number</span> {
+  <span class="kw">return</span> a + b;
+}
+
+<span class="kw">export const</span> PI: <span class="tp">number</span> = 3.14159;
+
+<span class="cm">// default export (one per file)</span>
+<span class="kw">export default function</span> multiply(
+  a: <span class="tp">number</span>, b: <span class="tp">number</span>
+): <span class="tp">number</span> {
+  <span class="kw">return</span> a * b;
+}</pre>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Inconsolata',monospace;font-size:0.68rem;color:var(--purple);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px">📥 Importing</p>
+      <div class="code-wrap" style="margin:0">
+        <pre style="padding:16px;font-size:0.78rem"><span class="cm">// app.ts</span>
+<span class="kw">import</span> { add, PI } <span class="kw">from</span> <span class="str">"./math"</span>;
+<span class="kw">import</span> multiply <span class="kw">from</span> <span class="str">"./math"</span>;
+<span class="kw">import</span> * <span class="kw">as</span> Math <span class="kw">from</span> <span class="str">"./math"</span>;
+
+console.log(add(2, 3));  <span class="cm">// 5</span>
+console.log(PI);         <span class="cm">// 3.14159</span>
+console.log(multiply(3,4)); <span class="cm">// 12</span>
+console.log(Math.add(1,2)); <span class="cm">// 3</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="sect reveal"><div class="sect-line"></div><div class="sect-label">Exporting types</div><div class="sect-line"></div></div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">types.ts → userService.ts</span>
+    </div>
+    <pre><span class="cm">// types.ts — share your types!</span>
+<span class="kw">export interface</span> <span class="cy">User</span> {
+  id: <span class="tp">number</span>;
+  name: <span class="tp">string</span>;
+  email: <span class="tp">string</span>;
+}
+
+<span class="kw">export type</span> <span class="cy">Status</span> = <span class="str">"active"</span> | <span class="str">"inactive"</span> | <span class="str">"banned"</span>;
+
+<span class="cm">// userService.ts — import with "import type" (preferred)</span>
+<span class="kw">import type</span> { <span class="cy">User</span>, <span class="cy">Status</span> } <span class="kw">from</span> <span class="str">"./types"</span>;
+
+<span class="kw">function</span> getUser(id: <span class="tp">number</span>): <span class="cy">User</span> {
+  <span class="kw">return</span> { id, name: <span class="str">"Alice"</span>, email: <span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0f6e63666c6a4f6a776e627f636a216c6062">[email&#160;protected]</a>"</span> };
+}</pre>
+  </div>
+
+  <div class="sect reveal"><div class="sect-line"></div><div class="sect-label">Project structure</div><div class="sect-line"></div></div>
+
+  <div class="code-wrap reveal">
+    <div class="code-top">
+      <div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div>
+      <span class="code-fname">project-structure</span>
+    </div>
+    <pre style="color:#93c5fd">my-project/
+├── src/
+│   ├── types/
+│   │   └── index.ts        <span class="cm">← all shared types & interfaces</span>
+│   ├── utils/
+│   │   └── helpers.ts      <span class="cm">← utility functions</span>
+│   ├── services/
+│   │   └── userService.ts  <span class="cm">← business logic</span>
+│   └── index.ts            <span class="cm">← main entry point</span>
+├── tsconfig.json            <span class="cm">← TypeScript config</span>
+└── package.json</pre>
+  </div>
+
+  <div class="note purple reveal">
+    <p>💡 <strong>Pro tip:</strong> Run <code>tsc --init</code> to auto-generate a <code>tsconfig.json</code> for your project with all options and their documentation commented in.</p>
+  </div>
+</section>
+
+<!-- ══════════════ WHAT'S NEXT ══════════════ -->
+<div class="next-block">
+  <h2>Module 2 Complete!</h2>
+  <p>You're now writing intermediate TypeScript. Time to go advanced.</p>
+  <div class="next-links">
+    <a href="lessons-1-to-6.html" class="next-btn secondary">
+      ← Back to Foundations
+    </a>
+    <a href="utility-types.html" class="next-btn primary">
+      Continue to Utility Types →
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">TS Academy</div>
+  <div class="footer-info">by WeberCodes · r-htu.github.io/typescript-course</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Mobile nav
+  function toggleMobile() {
+    const menu = document.getElementById('mobileMenu');
+    const isOpen = menu.classList.toggle('open');
+    document.getElementById('mIcon').style.display = isOpen ? 'none' : 'block';
+    document.getElementById('cIcon').style.display = isOpen ? 'block' : 'none';
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeMobile() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('mIcon').style.display = 'block';
+    document.getElementById('cIcon').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // Scroll reveal
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
