@@ -1083,11 +1083,6 @@ let status: <span class="code-type">Status</span> = <span class="code-string">"p
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-
-  // Scroll-triggered fade-in
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
         e.target.classList.add('visible');
         observer.unobserve(e.target);
       }
